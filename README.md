@@ -72,6 +72,8 @@ node server.js <mode>
 
 ## Contributing
 
+### Pushing
+
 Clone the repository locally.
 
 ```sh
@@ -97,6 +99,10 @@ git push origin <working branch>
 ```
 
 Submit a pull-request to the develop branch in GitHub, and add the appropriate approvers.
+
+### Documentation
+
+Use JsDoc to document Javascript and Typescript code.
 
 ## Bug tracking
 

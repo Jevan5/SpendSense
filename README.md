@@ -4,6 +4,16 @@
 
 Virtualytics uses computer vision to parse receipts and bills, and quantifies this data so that it may be analyzed. The items from a receipt or a bill can be categorized, to allow more powerful analytical reporting. The user can track their spending at merchants or in categories over time to see if they are meeting their budgeting goals. By collecting data from different merchants, users can query the systemt to see which merchants sell which items, and who sells it the cheapest.
 
+## Dependencies
+
+### Node.js (Latest stable, 12.13.0)
+
+https://nodejs.org/en/
+
+### MongoDB (Latest stable, 4.2.1)
+
+https://www.mongodb.com/download-center/community
+
 ## Installation
 
 ### Android
@@ -29,6 +39,36 @@ Google Vision API information can be [viewed on their site here](https://cloud.g
 - **NOTE** to prevent overloading a single billing account, where possible every development environment should use its own token
 
 Google Vision API can be executed VIA code, or using http requests (using cUrl, etc). Further information and documentation on usage can be accessed from the linked site.
+
+## Set-up Development Environment
+
+### Front End
+
+Navigate to the front end directory, update your dependencies, and start the ionic server:
+
+```sh
+cd <clone_directory>/front_end
+npm i
+ionic serve
+```
+
+### Back End
+
+Navigate to the bin subfolder in the MongoDB directory, and start the MongoDB server:
+
+```sh
+cd <MongoDB_installation>/MongoDB/Server/<version>/bin
+mongod
+```
+
+Navigate to the back end directory, update your dependencies, and start the node server:
+
+```sh
+cd <clone_directory>/back_end
+npm i
+# mode is either 'test' or 'prod'
+node server.js <mode>
+```
 
 ## Contributing
 

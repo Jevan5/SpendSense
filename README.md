@@ -34,6 +34,12 @@ TODO
 
 ### Using Google Vision API
 
+Google Vision API information can be [viewed on their site here](https://cloud.google.com/vision/docs/before-you-begin). An account should be created for use, as calling the API requires a unique access token.
+
+- **NOTE** to prevent overloading a single billing account, where possible every development environment should use its own token
+
+Google Vision API can be executed VIA code, or using http requests (using cUrl, etc). Further information and documentation on usage can be accessed from the linked site.
+
 ## Set-up Development Environment
 
 ### Front End

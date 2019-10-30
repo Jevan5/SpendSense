@@ -51,3 +51,5 @@ Authorization: <username>,<password>
 [SystemItem](./systemItems/README.md)
 
 [User](./users/README.md)
+
+[ScanReceipt](./scanReceipt/README.md)

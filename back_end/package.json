@@ -4,12 +4,18 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test --exit --timeout 30000",
+    "start": "nodemon server.js prod"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "express": "^4.17.1",
-    "mongoose": "^5.7.6"
+    "mocha": "^6.2.2",
+    "mongoose": "^5.7.6",
+    "nodemailer": "^6.3.1",
+    "nodemon": "^1.19.4"
   }
 }

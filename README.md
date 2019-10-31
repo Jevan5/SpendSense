@@ -111,6 +111,51 @@ Run the following command in the front end directory to run tests:
 ng test
 ```
 
+### Ionic Development
+
+Create re-usable components by running:
+
+```sh
+ionic g component components/<component-name>
+```
+
+`<component-name>` Is the name of the new component, all lowercase and hyphenated.
+
+Create injectible services by running:
+
+```sh
+ionic g service services/<service-name>/<service-name>
+```
+
+`<service-name>` Is the name of the new service, all lowercase and hyphenated.
+
+Create new pages by running:
+
+```sh
+ionic g component pages/<page-name>
+```
+
+`<page-name>` Is the name of the new page, all lowercase and hyphenated.
+
+### Express Development
+
+Create a new model by creating a .js file for it in models/:
+
+```sh
+type nul > models/<modelName>.js
+```
+
+`<modelName>` Is the model's singular name in camel-case.
+
+Create a new route by creating a directory and file for it in routes/:
+
+> If the route is for a model, make sure the name is pluralized.
+
+```sh
+mkdir routes/<routeName>
+type nul > routes/<routeName>/<routeName>.js
+```
+
 ### Pushing
 
 Clone the repository locally.

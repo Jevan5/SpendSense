@@ -70,6 +70,18 @@ npm i
 node server.js <mode>
 ```
 
+### Secrets.json
+
+In the root of the project (same location as this README), a `secrets.json` file is required, with the following info (values must be filled out locally):
+
+```json
+{
+    "emailAddress": <admin_email>,
+    "emailPassword": <admin_email_password>,
+    "visionApiToken": <google_api_token>
+}
+```
+
 ## Contributing
 
 ### Pushing

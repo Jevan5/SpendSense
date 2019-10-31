@@ -21,11 +21,18 @@ router.route('/')
     .post((req, res) => {
         try {
             var user = new User(req.body.user);
+            if (user.password == null) {
+                throw new Error("Missing 'password'");
+            }
+
             if (user.password.length < cryptoHelper.getMinPasswordLength()) {
                 throw new Error('Password must be at least ' + cryptoHelper.getMinPasswordLength() + ' characters long.');
             }
-            user.email = user.email.toLowerCase();
-            user.username = user.username.toLowerCase();
+
+            if (user.email == null) {
+                throw new Error("Missing 'email'");
+            }
+
             user.salt = cryptoHelper.generateRandomString(cryptoHelper.getSecureStringLength());
             user.password = cryptoHelper.hash(user.password, user.salt);
             var authenticationPlaintext = cryptoHelper.generateRandomString(cryptoHelper.getSecureStringLength());

@@ -66,9 +66,10 @@ Navigate to the back end directory, update your dependencies, and start the node
 ```sh
 cd <clone_directory>/back_end
 npm i
-# mode is either 'test' or 'prod'
-node server.js <mode>
+nodemon <mode>
 ```
+
+`mode` Is either prod|dev|test. It is possible to have one instance of each mode running at the same time, since they each serve off different ports and connect to different databases.
 
 ### Secrets.json
 
@@ -83,6 +84,32 @@ In the root of the project (same location as this README), a `secrets.json` file
 ```
 
 ## Contributing
+
+### Testing
+
+Before submitting changes, make sure the tests for the backend and frontend are working. Try to implement as much test coverage as you can for your code.
+
+#### Back End
+
+Run the following command in the back end directory to run tests:
+
+```sh
+npm test
+```
+
+#### Front End
+
+The front end contains tests cases which query the backend, so ensure the backend is running a dev instance:
+
+```sh
+nodemon server.js dev
+```
+
+Run the following command in the front end directory to run tests:
+
+```sh
+ng test
+```
 
 ### Pushing
 

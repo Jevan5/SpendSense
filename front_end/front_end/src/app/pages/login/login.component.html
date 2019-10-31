@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class='ion-padding'>
+    <ngb-tabset *ngIf='!isLoading()' [justify]='justified'>
+      <ngb-tab title='Login'>
+        <ng-template ngbTabContent>
+          <label>Username</label>
+          <input type='text' [(ngModel)]='model.login.username'>
+          <label>Password</label>
+          <input type='password' [(ngModel)]='model.login.password'>
+          <button type='button' (click)='login()'>Log In</button>
+          <app-alert-message [loadable]='this'></app-alert-message>
+        </ng-template>
+      </ngb-tab>
+      <ngb-tab title='Register'>
+        <ng-template ngbTabContent>
+          <label>Username</label>
+          <input type='text' [(ngModel)]='model.register.username'>
+          <label>Password</label>
+          <input type='password' [(ngModel)]='model.register.password'>
+          <label>Email</label>
+          <input type='text' [(ngModel)]='model.register.email'>
+          <label>First Name</label>
+          <input type='text' [(ngModel)]='model.register.firstName'>
+          <label>Last Name</label>
+          <input type='text' [(ngModel)]='model.register.lastName'>
+          <button type='button' (click)='register()'>Register</button>
+          <app-alert-message [loadable]='this'></app-alert-message>
+        </ng-template>
+      </ngb-tab>
+      <ngb-tab title='Change Password'>
+        <ng-template ngbTabContent>
+          <label>Username</label>
+          <input type='text' [(ngModel)]='model.changePassword.username'>
+          <label>New Password</label>
+          <input type='password' [(ngModel)]='model.changePassword.password'>
+          <button type='button' (click)='changePassword()'>Change Password</button>
+          <app-alert-message [loadable]='this'></app-alert-message>
+        </ng-template>
+      </ngb-tab>
+    </ngb-tabset>
+    <h1 *ngIf='isLoading()'>Is Loading</h1>
+    <!-- <app-loading-spinner *ngIf='isLoading()' [message]='getLoadingMessage()'></app-loading-spinner> -->
+  </div>
+</ion-content>

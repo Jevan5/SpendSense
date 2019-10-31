@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <nav class='navbar navbar-expand-lg navbar-light bg-light'>
+      <a class='navbar-brand' (click)='clickNavigation("/home")'>Virtualytics</a>
+      <p *ngIf='authenticationService.isLoggedIn()'>Logged in as {{authenticationService.getUser().getValue('firstName')}}</p>
+      <button class='navbar-toggler' type='button' (click)='toggleNavbar()'>
+        <span class='navbar-toggler-icon'></span>
+      </button>
+      <div class='collapse navbar-collapse' [ngClass]="{'show': isNavbarOpen}">
+        <ul class='navbar-nav mr-auto'>
+          <li class='nav-item'>
+            <a *ngIf='!authenticationService.isLoggedIn()' class='nav-link' (click)='clickNavigation("/login")'>Login</a>
+            <a *ngIf='authenticationService.isLoggedIn()' class='nav-link' (click)='clickLogout()'>Logout</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </ion-toolbar>
+</ion-header>

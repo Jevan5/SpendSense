@@ -22,10 +22,16 @@ export class AppComponent {
   ) {
     this.initializeApp();
 
+    var loggedInURLs = ['/profile'];
+    var loggedOutURLs = ['/login'];
     // Can't navigate to login page if they're logged in
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
-        if (event.url === '/login') {
+        if (loggedInURLs.indexOf(event.url) >= 0) { // URL which needs to be logged in for
+          if (!this.authenticationService.isLoggedIn()) {
+            this.router.navigate(['/home']);
+          }
+        } else if (loggedOutURLs.indexOf(event.url) >= 0) { // URL which you can't be logged in for
           if (this.authenticationService.isLoggedIn()) {
             this.router.navigate(['/home']);
           }

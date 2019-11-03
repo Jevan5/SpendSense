@@ -15,10 +15,9 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { FooterComponent } from './components/footer/footer.component';
-import { AlertMessageComponent } from './components/alert-message/alert-message.component';
 
 @NgModule({
   declarations: [
@@ -26,8 +25,7 @@ import { AlertMessageComponent } from './components/alert-message/alert-message.
     HomeComponent,
     LoginComponent,
     NavbarComponent,
-    FooterComponent,
-    AlertMessageComponent
+    ProfileComponent
   ],
   entryComponents: [],
   imports: [
@@ -37,7 +35,8 @@ import { AlertMessageComponent } from './components/alert-message/alert-message.
     RouterModule.forRoot([
       { path: '', component: HomeComponent },
       { path: 'home', component: HomeComponent },
-      { path: 'login', component: LoginComponent }
+      { path: 'login', component: LoginComponent },
+      { path: 'profile', component: ProfileComponent }
     ]),
     HttpClientModule,
     NgbModule,

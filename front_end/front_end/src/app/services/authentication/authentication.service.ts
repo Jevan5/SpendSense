@@ -13,7 +13,7 @@ export class AuthenticationService {
   private password: string;
   private authorizationHeader = 'Authorization';
 
-  constructor(private http: HttpClient, public storage: Storage) {}
+  constructor(public http: HttpClient, public storage: Storage) {}
 
   /**
    * Attempts to login the user.
@@ -21,16 +21,14 @@ export class AuthenticationService {
    * @param password Password of user.
    * @returns Resolves with the logged in User if login is successful.
    */
-  public login(username: string, password: string): Observable<User> {
-    return new Observable((subscriber) => {
+  public login(username: string, password: string): Promise<User> {
+    return new Promise((resolve, reject) => {
       if (username == null) {
-        subscriber.error('username is null');
-        return;
+        return reject('username is null');
       }
 
       if (password == null) {
-        subscriber.error('password is null');
-        return;
+        return reject('password is null');
       }
 
       this.http.get('http://' + environment.backEndIp + ':' + environment.backEndPort + '/users', {
@@ -39,21 +37,21 @@ export class AuthenticationService {
         })
       }).subscribe((data: any) => {
         try {
-          this.user = User.createFromResponse(data.user);
+          this.user = User.createOneFromResponse(data);
           this.password = password;
 
           this.storage.set('username', username).then(() => {
             return this.storage.set('password', password);
           }).then(() => {
-            subscriber.next(this.getUser());
+            resolve(this.getUser());
           }).catch((err) => {
-            subscriber.error(err);
+            reject(err);
           });
         } catch (e) {
-          subscriber.error(e);
+          reject(e);
         }
       }, (err) => {
-        subscriber.error(err);
+        reject(err);
       });
     });
   }
@@ -83,8 +81,8 @@ export class AuthenticationService {
    * @param email Email to use for registration.
    * @returns Resolves with the registered User if registration is successful. Still needs to be authenticated through email.
    */
-  public register(username: string, password: string, firstName: string, lastName: string, email: string): Observable<User> {
-    return new Observable((subscriber) => {
+  public register(username: string, password: string, firstName: string, lastName: string, email: string): Promise<User> {
+    return new Promise((resolve, reject) => {
       this.http.post('http://' + environment.backEndIp + ':' + environment.backEndPort + '/users', {
         user: {
           username: username,
@@ -95,12 +93,12 @@ export class AuthenticationService {
         }
       }).subscribe((data: any) => {
         try {
-          subscriber.next(User.createFromResponse(data.user));
+          resolve(User.createOneFromResponse(data));
         } catch (e) {
-          subscriber.error(e);
+          reject(e);
         }
       }, (err) => {
-        subscriber.error(err);
+        reject(err);
       });
     });
   }
@@ -111,8 +109,8 @@ export class AuthenticationService {
    * @param password New password.
    * @returns Resolves with the User if the password is requested to change.
    */
-  public changePassword(username: string, password: string): Observable<User> {
-    return new Observable((subscriber) => {
+  public changePassword(username: string, password: string): Promise<User> {
+    return new Promise((resolve, reject) => {
       this.http.put('http://' + environment.backEndIp + ':' + environment.backEndPort + '/users', {
         user: {
           username: username,
@@ -120,12 +118,12 @@ export class AuthenticationService {
         }
       }).subscribe((data: any) => {
         try {
-          subscriber.next(User.createFromResponse(data.user));
+          resolve(User.createOneFromResponse(data));
         } catch (e) {
-          subscriber.error(e);
+          reject(e);
         }
       }, (err) => {
-        subscriber.error(err);
+        reject(err);
       });
     });
   }
@@ -158,7 +156,7 @@ export class AuthenticationService {
    * Attempts to refresh the data of the logged in user.
    * @returns Resolves with the refreshed loggined in user if successful.
    */
-  public refreshUser(): Observable<User> {
+  public refreshUser(): Promise<User> {
     return this.login(this.getUser().getValue('username'), this.password);
   }
 
@@ -166,27 +164,19 @@ export class AuthenticationService {
    * Attempts to login using credentials from local storage.
    * @returns Resolves with the logged in user if successful.
    */
-  public autoLogin(): Observable<User> {
+  public autoLogin(): Promise<User> {
     var username;
     var password;
     this.storage = new Storage({});
 
-    return new Observable((subscriber) => {
-      this.storage.get('username').then((u) => {
-        username = u;
-  
-        return this.storage.get('password');
-      }).then((p) => {
-        password = p;
-  
-        this.login(username, password).subscribe((data) => {
-          subscriber.next(data);
-        }, (err) => {
-          subscriber.error(err);
-        });
-      }).catch((err) => {
-        subscriber.error(err);
-      });
+    return this.storage.get('username').then((u) => {
+      username = u;
+
+      return this.storage.get('password');
+    }).then((p) => {
+      password = p;
+
+      return this.login(username, password);
     });
   }
 }

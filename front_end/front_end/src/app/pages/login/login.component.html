@@ -1,50 +1,78 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ion-title>Login</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <div class='ion-padding'>
-    <ngb-tabset *ngIf='!isLoading()' [justify]='justified'>
+    <ngb-tabset [justify]='justified'>
       <ngb-tab title='Login'>
         <ng-template ngbTabContent>
-          <label>Username</label>
-          <input type='text' [(ngModel)]='model.login.username'>
-          <label>Password</label>
-          <input type='password' [(ngModel)]='model.login.password'>
-          <button type='button' (click)='login()'>Log In</button>
-          <app-alert-message [loadable]='this'></app-alert-message>
+          <ion-list lines='full' class='ion-no-margin ion-no-padding'>
+            <ion-item>
+              <ion-label position='stacked'>Username <ion-text color='danger'>*</ion-text></ion-label>
+              <ion-input type="text" [(ngModel)]='model.login.username'></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position='stacked'>Password <ion-text color='danger'>*</ion-text></ion-label>
+              <ion-input type='password' [(ngModel)]='model.login.password'></ion-input>
+            </ion-item>
+          </ion-list>
+          <div class="ion-padding">
+            <ion-button expand="block" class="ion-no-margin" (click)='login()'>Login</ion-button>
+          </div>
         </ng-template>
       </ngb-tab>
       <ngb-tab title='Register'>
         <ng-template ngbTabContent>
-          <label>Username</label>
-          <input type='text' [(ngModel)]='model.register.username'>
-          <label>Password</label>
-          <input type='password' [(ngModel)]='model.register.password'>
-          <label>Email</label>
-          <input type='text' [(ngModel)]='model.register.email'>
-          <label>First Name</label>
-          <input type='text' [(ngModel)]='model.register.firstName'>
-          <label>Last Name</label>
-          <input type='text' [(ngModel)]='model.register.lastName'>
-          <button type='button' (click)='register()'>Register</button>
-          <app-alert-message [loadable]='this'></app-alert-message>
+          <ion-list lines='full' class='ion-no-margin ion-no-padding'>
+            <ion-item>
+              <ion-label position='stacked'>Username <ion-text color='danger'>*</ion-text></ion-label>
+              <ion-input type='text' [(ngModel)]='model.register.username'></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position='stacked'>Password <ion-text color='danger'>*</ion-text></ion-label>
+              <ion-input type='password' [(ngModel)]='model.register.password'></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position='stacked'>Email <ion-text color='danger'>*</ion-text></ion-label>
+              <ion-input type='email' [(ngModel)]='model.register.email'></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position='stacked'>First Name <ion-text color='danger'>*</ion-text></ion-label>
+              <ion-input type='text' [(ngModel)]='model.register.firstName'></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position='stacked'>Last Name <ion-text color='danger'>*</ion-text></ion-label>
+              <ion-input type='text' [(ngModel)]='model.register.lastName'></ion-input>
+            </ion-item>
+          </ion-list>
+          <div class='ion-padding'>
+            <ion-button expand='block' class='ion-no-margin' (click)='register()'>Register</ion-button>
+          </div>
         </ng-template>
       </ngb-tab>
       <ngb-tab title='Change Password'>
         <ng-template ngbTabContent>
-          <label>Username</label>
-          <input type='text' [(ngModel)]='model.changePassword.username'>
-          <label>New Password</label>
-          <input type='password' [(ngModel)]='model.changePassword.password'>
-          <button type='button' (click)='changePassword()'>Change Password</button>
-          <app-alert-message [loadable]='this'></app-alert-message>
+          <ion-list lines='full' class='ion-no-margin ion-no-padding'>
+            <ion-item>
+              <ion-label position='stacked'>Username <ion-text color='danger'>*</ion-text></ion-label>
+              <ion-input type='text' [(ngModel)]='model.changePassword.username'></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position='stacked'>New Password <ion-text color='danger'>*</ion-text></ion-label>
+              <ion-input type='password' [(ngModel)]='model.changePassword.changingPassword'></ion-input>
+            </ion-item>
+          </ion-list>
+          <div class='ion-padding'>
+            <ion-button expand='block' class='ion-no-margin' (click)='changePassword()'>Change Password</ion-button>
+          </div>
         </ng-template>
       </ngb-tab>
     </ngb-tabset>
-    <h1 *ngIf='isLoading()'>Is Loading</h1>
-    <!-- <app-loading-spinner *ngIf='isLoading()' [message]='getLoadingMessage()'></app-loading-spinner> -->
   </div>
 </ion-content>

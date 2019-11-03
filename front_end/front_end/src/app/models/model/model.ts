@@ -40,6 +40,18 @@ export abstract class Model {
     }
 
     /**
+     * Sets the fields' values.
+     * @param json JSON mapping from keys to values.
+     */
+    public setValues(json): void {
+        for (var key in json) {
+            if (json.hasOwnProperty(key)) {
+                this.setValue(key, json[key]);
+            }
+        }
+    }
+
+    /**
      * Removes a field from the model.
      * @param field Field to remove.
      * @returns Value of the field before removal.
@@ -69,14 +81,27 @@ export abstract class Model {
      * Gets the name of the model.
      * @returns The name of the model.
      */
-    public abstract getModelName(): string;
+    public static getModelName(): string {
+        throw new Error('Function not implemented.');
+    }
 
     /**
      * Creates the model from a response originating from the back end.
      * Will ensure the structure of the response.
+     * @param response Response from the backend.
      * @returns The model.
      */
-    public static createFromResponse(response: any): Model {
+    public static createOneFromResponse(response: any): Model {
+        throw new Error('Function not implemented.');
+    }
+
+    /**
+     * Creates models from a response originating from the back end.
+     * Will ensure the structure of the response.
+     * @param response Response from the backend.
+     * @returns The models.
+     */
+    public static createManyFromResponse(response: any): Array<Model> {
         throw new Error('Function not implemented.');
     }
 
@@ -84,4 +109,10 @@ export abstract class Model {
      * Returns a deep copy of this model.
      */
     public abstract deepCopy(): Model;
+
+    /**
+     * Gets the class of the model.
+     * @returns The class of the model.
+     */
+    public abstract getClass();
 };

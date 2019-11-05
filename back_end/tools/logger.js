@@ -31,4 +31,20 @@ module.exports = class Logger {
     static valuesDontMatchMessage(value1, descriptor1, value2, descriptor2) {
         return descriptor1 + " (" + value1 + ") does not match " + descriptor2 + " (" + value2 + ").";
     }
+
+    /**
+     * Gets the message used for entries into a table that would violate uniqueness.
+     * @returns {string} The message for uniqueness violation.
+     */
+    static alreadyExistsMessage() {
+        return '{VALUE} already exists';
+    }
+
+    /**
+     * Gets the message used for entries into a table which are missing a required field.
+     * @returns {string} The message for the missing required field.
+     */
+    static isRequiredMessage() {
+        return 'Is required';
+    }
 };

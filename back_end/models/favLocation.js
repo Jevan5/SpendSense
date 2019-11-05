@@ -7,12 +7,12 @@ const logger    = require('../tools/logger');
 const FavLocationSchema = new Schema({
     _userId: {
         type: Schema.Types.ObjectId,
-        required: true,
+        required: [true, logger.isRequiredMessage()],
         ref: 'User',
         unique: false
     }, _locationId: {
         type: Schema.Types.ObjectId,
-        required: true,
+        required: [true, logger.isRequiredMessage()],
         ref: 'Location',
         unique: false
     }
@@ -20,23 +20,21 @@ const FavLocationSchema = new Schema({
 
 FavLocationSchema.index({ _userId: 1, _locationId: 1 }, { unique: true });
 
-FavLocationSchema.pre('save', (favLocation) => {
-    return new Promise((resolve, reject) => {
-        User.findById(favLocation._userId).then((user) => {
-            if (!user) {
-                throw new Error(logger.valueNotExistMessage(favLocation._userId, '_userId'));
-            }
+FavLocationSchema.pre('save', function(next) {
+    User.findById(this._userId).then((user) => {
+        if (!user) {
+            throw new Error(logger.valueNotExistMessage(this._userId, '_userId'));
+        }
 
-            return Location.findById(favLocation._locationId);
-        }).then((location) => {
-            if (!location) {
-                throw new Error(logger.valueNotExistMessage(favLocation._locationId, '_locationId'));
-            }
+        return Location.findById(this._locationId);
+    }).then((location) => {
+        if (!location) {
+            throw new Error(logger.valueNotExistMessage(this._locationId, '_locationId'));
+        }
 
-            resolve();
-        }).catch((err) => {
-            reject(err);
-        });
+        next();
+    }).catch((err) => {
+        next(err);
     });
 })
 

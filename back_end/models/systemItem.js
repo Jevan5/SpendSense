@@ -1,14 +1,15 @@
 const mongoose  = require('mongoose');
 const Schema    = mongoose.Schema;
+const logger    = require('../tools/logger');
 
 const SystemItemSchema = new Schema({
     tag: {
         type: String,
-        required: true,
+        required: [true, logger.isRequiredMessage()],
         unique: false
     }, name: {
         type: String,
-        required: true,
+        required: [true, logger.isRequiredMessage()],
         unique: false
     }
 });

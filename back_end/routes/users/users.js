@@ -21,11 +21,18 @@ router.route('/')
     .post((req, res) => {
         try {
             var user = new User(req.body.user);
+            if (user.password == null) {
+                throw new Error("Missing 'password'");
+            }
+
             if (user.password.length < cryptoHelper.getMinPasswordLength()) {
                 throw new Error('Password must be at least ' + cryptoHelper.getMinPasswordLength() + ' characters long.');
             }
-            user.email = user.email.toLowerCase();
-            user.username = user.username.toLowerCase();
+
+            if (user.email == null) {
+                throw new Error("Missing 'email'");
+            }
+
             user.salt = cryptoHelper.generateRandomString(cryptoHelper.getSecureStringLength());
             user.password = cryptoHelper.hash(user.password, user.salt);
             var authenticationPlaintext = cryptoHelper.generateRandomString(cryptoHelper.getSecureStringLength());
@@ -101,15 +108,26 @@ router.route('/:_id')
         authorizer.authenticateRequest(req).then((u) => {
             user = u;
 
-            if (req.body.user.changingEmail.toLowerCase() != user.changingEmail) {   // Changing email
-                let authenticationPlaintext = cryptoHelper.generateRandomString(cryptoHelper.getSecureStringLength());
-                user.authentication = cryptoHelper.hash(authenticationPlaintext, user.salt);
-                user.changingEmail = req.body.user.changingEmail.toLowerCase();
-                // Can't be changing email and password at same time
-                user.changingPassword = '';
-                return nodemailerHelper.sendMail(user.changingEmail,
-                    'Authentication for Virtualytics',
-                    'Please click the following link to authenticate: http://' + environment.ip + ':' + environment.port + '/authenticate/?username=' + user.username + '&authentication=' + authenticationPlaintext);
+            if (req.body.user.changingEmail == '') {    // Don't want to change emails
+                if (user.changingEmail != '') { // Previously did want to change emails
+                    // Cancelling the email change request
+                    user.authentication = '';
+                    user.changingEmail = '';
+                } else {    // Previously did not want to change emails
+                    // Do nothing
+                }
+            } else {    // Has requested to change email (either now, or previously)
+                if (req.body.user.changingEmail.toLowerCase() != user.changingEmail) {  // Has just now requested to change email
+                    var authenticationPlaintext = cryptoHelper.generateRandomString(cryptoHelper.getSecureStringLength());
+                    user.authentication = authenticationPlaintext;
+                    user.changingEmail = req.body.user.changingEmail;
+                    user.authentication = cryptoHelper.hash(authenticationPlaintext, user.salt);
+                    user.changingPassword = '';
+
+                    return nodemailerHelper.sendMail(user.changingEmail,
+                        'Authenticating new email for Virtualytics',
+                        'Please click the following link to authenticate: http://' + environment.ip + ':' + environment.port + '/authenticate/?username=' + user.username + '&authentication=' + authenticationPlaintext);
+                }
             }
         }).then(() => {
             user.firstName = req.body.user.firstName;

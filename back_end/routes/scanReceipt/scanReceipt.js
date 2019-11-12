@@ -53,9 +53,13 @@ router.route('/')
             var fileName = '';
             req.busboy.on('file', (fieldname, file, filename) => {
                 console.log(`Scan of '${filename}' started`);
+                dir = `./logs/scans/`
+                if (!fs.existsSync(dir)) {
+                    fs.mkdirSync(dir);
+                }
 
-                file.pipe(fs.createWriteStream(`./${filename}`))
-                fileName = `./${filename}`;
+                fileName = `${dir}${filename}`;
+                file.pipe(fs.createWriteStream(fileName))
 
 
                 // const visClient = new vision.ImageAnnotatorClient();

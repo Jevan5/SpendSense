@@ -6,6 +6,10 @@ const router        = express.Router();
 const environment   = require('./environment');
 const cryptoHelper 	= require('./tools/cryptoHelper');
 
+// handles files in body of POST requests
+var busboy = require('connect-busboy');
+app.use(busboy());
+
 mongoose.connect('mongodb://localhost:27017/' + environment.db, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -14,11 +18,12 @@ mongoose.connect('mongodb://localhost:27017/' + environment.db, {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Credentials", true);
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Access, Authorization');
-	res.setHeader('Access-Control-Allow-Methods', 'POST, PATCH, GET, PUT, DELETE, OPTIONS');
+	res.setHeader('Access-Control-Allow-Methods', 'POST, PATCH, GET, PUT, DELETE, OPTIONS');	
 	next();
 });
 
@@ -34,6 +39,7 @@ const receiptItems	= require('./routes/receiptItems/receiptItems');
 const receipts		= require('./routes/receipts/receipts');
 const systemItems	= require('./routes/systemItems/systemItems');
 const users 		= require('./routes/users/users');
+const scanRecept 	= require('./routes/scanReceipt/scanReceipt');
 
 app.use('/authenticate', authenticate);
 app.use('/favItems', favItems);
@@ -45,6 +51,7 @@ app.use('/receiptItems', receiptItems);
 app.use('/receipts', receipts);
 app.use('/systemItems', systemItems);
 app.use('/users', users);
+app.use('/scanReceipt', scanRecept);
 
 app.listen(environment.port);
 console.log('Listening on ' + environment.port);

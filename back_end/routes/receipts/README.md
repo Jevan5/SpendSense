@@ -6,6 +6,7 @@ A receipt contains receipt items.
 {
     "_id": string,
     "_userId": string,
+    "_locationId": string,
     "date": Date,
     "__v": number
 }
@@ -14,6 +15,8 @@ A receipt contains receipt items.
 `_id` Unique identifier for the receipt item. Non-modifiable.
 
 `_userId` _id of the user which this receipt item belongs to. Non-modifiable.
+
+`_locationId` _id of the location where the receipt was taken from.
 
 `date` Date the receipt was made.
 
@@ -39,12 +42,14 @@ url: http://127.0.0.1:8080/receipts
         {
             "_id": "5db62f14daeeec4704e6ba1b",
             "_userId": "3db62f14daeeec4704e6ba1c",
+            "_locationId": "fdb62f14daeeec4704e6ba1c",
             "date": "2017-02-22",
             "__v": 0
         },
         {
             "_id": "5db62f14daeeec4704e6ba1d",
             "_userId": "3db62f14daeeec4704e6ba1c",
+            "_locationId": "9db62f14daeeec4704e6ba1c",
             "date": "2018-05-17",
             "__v": 0
         }
@@ -63,6 +68,7 @@ url: http://127.0.0.1:8080/receipts,
 body: {
     "receipt": {
         "_userId": "3db62f14daeeec4704e6ba1c",
+        "_locationId": "fdb62f14daeeec4704e6ba1c",
         "date": "2018-05-17"
     }
 }
@@ -75,6 +81,7 @@ body: {
     "receipt": {
         "_id": "5db62f14daeeec4704e6ba1d",
         "_userId": "3db62f14daeeec4704e6ba1c",
+        "_locationId": "fdb62f14daeeec4704e6ba1c",
         "date": "2018-05-17",
         "__v": 0
     }
@@ -100,6 +107,7 @@ url: http://127.0.0.1:8080/receipts/5db62f14daeeec4704e6ba1d
     "receipt": {
         "_id": "5db62f14daeeec4704e6ba1d",
         "_userId": "3db62f14daeeec4704e6ba1c",
+        "_locationId": "fdb62f14daeeec4704e6ba1c",
         "date": "2018-05-17",
         "__v": 0
     }
@@ -128,6 +136,7 @@ body: {
     "receipt": {
         "_id": "5db62f14daeeec4704e6ba1d",
         "_userId": "3db62f14daeeec4704e6ba1c",
+        "_locationId": "fdb62f14daeeec4704e6ba1c",
         "date": "2018-06-17",
         "__v": 1
     }

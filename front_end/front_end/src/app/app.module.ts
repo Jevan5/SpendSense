@@ -10,12 +10,14 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
-import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from 'src/app/app.component';
+import { AppRoutingModule } from 'src/app/app-routing.module';
 
-import { HomeComponent } from './pages/home/home.component';
-import { LoginComponent } from './pages/login/login.component';
-import { ProfileComponent } from './pages/profile/profile.component';
+import { HomeComponent } from 'src/app/pages/home/home.component';
+import { LoginComponent } from 'src/app/pages/login/login.component';
+import { ProfileComponent } from 'src/app/pages/profile/profile.component';
+import { ReportsComponent } from 'src/app/pages/reports/reports.component';
+import { SearchComponent } from 'src/app/pages/search/search.component';
 
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ManualEntryComponent } from './pages/manual-entry/manual-entry.component';
@@ -33,7 +35,9 @@ import { UploadImageComponent } from './pages/upload-image/upload-image.componen
     NavbarComponent,
     ProfileComponent,
     ManualEntryComponent,
-    UploadImageComponent
+    UploadImageComponent,
+    ReportsComponent,
+    SearchComponent
   ],
   entryComponents: [],
   imports: [
@@ -46,7 +50,9 @@ import { UploadImageComponent } from './pages/upload-image/upload-image.componen
       { path: 'login', component: LoginComponent },
       { path: 'profile', component: ProfileComponent },
       { path: 'manual-entry', component: ManualEntryComponent},
-      { path: 'upload-image', component: UploadImageComponent}
+      { path: 'upload-image', component: UploadImageComponent},
+      { path: 'reports', component: ReportsComponent },
+      { path: 'search', component: SearchComponent }
     ]),
     HttpClientModule,
     NgbModule,

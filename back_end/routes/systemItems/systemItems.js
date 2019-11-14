@@ -24,8 +24,9 @@ router.route('/')
     })
     // Create a new system item
     .post((req, res) => {
+        var systemItem;
         authorizer.authenticateRequest(req).then((user) => {
-            var systemItem = new SystemItem(req.body.systemItem);
+            systemItem = new SystemItem(req.body.systemItem);
 
             return systemItem.save();
         }).then(() => {

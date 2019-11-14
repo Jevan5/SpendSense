@@ -7,7 +7,8 @@ const FranchiseSchema = new Schema({
     name: {
         type: String,
         index: true,
-        required: [true, logger.isRequiredMessage()]
+        required: [true, logger.isRequiredMessage()],
+        unique: true
     }
 });
 

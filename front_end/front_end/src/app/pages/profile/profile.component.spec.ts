@@ -1,7 +1,9 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Injector } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientModule, HttpClient, HttpHandler, ɵHttpInterceptingHandler } from '@angular/common/http';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientModule } from '@angular/common/http';
 import { Storage } from '@ionic/storage';
+import { ToastController } from '@ionic/angular';
+import { LoadingController } from '@ionic/angular';
 
 import { ProfileComponent } from './profile.component';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
@@ -11,6 +13,8 @@ import { User } from 'src/app/models/user/user';
 import { TestVariables } from 'src/app/testing/test-variables';
 import { MockAuthenticationService } from 'src/app/services/authentication/mock-authentication.service';
 import { MockModelService } from 'src/app/services/model/mock-model.service';
+import { MockToastController } from 'src/app/testing/mock-toastController';
+import { MockLoadingController } from 'src/app/testing/mock-loadingController';
 
 describe('ProfileComponent', () => {
   var component: ProfileComponent;
@@ -18,25 +22,13 @@ describe('ProfileComponent', () => {
   let mockAuthenticationService: MockAuthenticationService;
 
   beforeEach((done) => {
-    var user = new User();
-    user.setValues({
-      __v: 0,
-      username: 'someUsername',
-      password: 'somePassword',
-      email: 'someEmail@server.endpoint',
-      firstName: 'theirFirstName',
-      lastName: 'theirLastName',
-      salt: 'someSalt',
-      authentication: '',
-      changingEmail: '',
-      changingPassword: ''
-    });
+    var user = TestVariables.getUser();
 
     var mockModelService = new MockModelService();
     mockModelService.save(user).then((u) => {
       mockAuthenticationService = new MockAuthenticationService(u);
 
-      TestBed.configureTestingModule({
+      return TestBed.configureTestingModule({
         declarations: [ ProfileComponent ],
         schemas: [CUSTOM_ELEMENTS_SCHEMA],
         imports: [HttpClientModule],
@@ -52,17 +44,25 @@ describe('ProfileComponent', () => {
           {
             provide: ModelService,
             useValue: mockModelService
+          },
+          {
+            provide: ToastController,
+            useValue: new MockToastController()
+          },
+          {
+            provide: LoadingController,
+            useValue: new MockLoadingController()
           }
         ]
-      }).compileComponents().then(() => {
-        fixture = TestBed.createComponent(ProfileComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
+      }).compileComponents();
+    }).then(() => {
+      fixture = TestBed.createComponent(ProfileComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
 
-        done();
-      }).catch((err) => {
-          fail(err);
-      });
+      done();
+    }).catch((err) => {
+      fail(err);
     });
   });
 

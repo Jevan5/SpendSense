@@ -49,6 +49,8 @@ Navigate to the front end directory, update your dependencies, and start the ion
 ```sh
 cd <clone_directory>/front_end
 npm i
+cd front_end
+npm i
 ionic serve
 ```
 
@@ -66,7 +68,7 @@ Navigate to the back end directory, update your dependencies, and start the node
 ```sh
 cd <clone_directory>/back_end
 npm i
-nodemon <mode>
+nodemon server.js <mode>
 ```
 
 `mode` Is either prod|dev|test. It is possible to have one instance of each mode running at the same time, since they each serve off different ports and connect to different databases.

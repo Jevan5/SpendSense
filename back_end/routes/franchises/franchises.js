@@ -20,8 +20,9 @@ router.route('/')
     })
     // Creates a franchise
     .post((req, res) => {
+        var franchise;
         authorizer.authenticateRequest(req).then((user) => {
-            var franchise = new Franchise(req.body.franchise);
+            franchise = new Franchise(req.body.franchise);
 
             return franchise.save();
         }).then(() => {

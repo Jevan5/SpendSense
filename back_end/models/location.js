@@ -8,18 +8,24 @@ const LocationSchema = new Schema({
         type: Schema.Types.ObjectId,
         required: [true, logger.isRequiredMessage()],
         index: 'hashed',
-        ref: 'Franchise'
+        ref: 'Franchise',
+        unique: false
     }, address: {
         type: String,
-        required: [true, logger.isRequiredMessage()]
+        required: [true, logger.isRequiredMessage()],
+        unique: false
     }, city: {
         type: String,
-        required: [true, logger.isRequiredMessage()]
+        required: [true, logger.isRequiredMessage()],
+        unique: false
     }, country: {
         type: String,
-        required: [true, logger.isRequiredMessage()]
+        required: [true, logger.isRequiredMessage()],
+        unique: false
     }
 });
+
+LocationSchema.index({ _franchiseId: 1, city: 1, address: 1, country: 1 }, { unique: true });
 
 LocationSchema.pre('save', function(next) {
     Franchise.findById(this._franchiseId).then((franchise) => {

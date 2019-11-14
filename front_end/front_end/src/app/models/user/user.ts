@@ -27,7 +27,7 @@ export class User extends Model {
                 throw new Error("response (" + JSON.stringify(response) + ") is missing property (" + field + ")");
             }
 
-            user.setValue(field, response.user[field]);
+            user.setValue(field, response[User.getModelName()][field]);
         });
 
         return user;

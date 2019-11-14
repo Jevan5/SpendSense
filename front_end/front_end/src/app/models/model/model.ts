@@ -82,17 +82,18 @@ export abstract class Model {
      * @returns The name of the model.
      */
     public static getModelName(): string {
-        throw new Error('Function not implemented.');
+        throw new Error('Model.getModelName() is not implemented.');
     }
 
     /**
      * Creates the model from a response originating from the back end.
      * Will ensure the structure of the response.
      * @param response Response from the backend.
+     * @param model Model to create.
      * @returns The model.
      */
-    public static createOneFromResponse(response: any): Model {
-        throw new Error('Function not implemented.');
+    public static createOneFromResponse(response: any, model: Model): Model {
+        throw new Error('Model.createOneFromResponse() is not implemented.');
     }
 
     /**
@@ -102,7 +103,7 @@ export abstract class Model {
      * @returns The models.
      */
     public static createManyFromResponse(response: any): Array<Model> {
-        throw new Error('Function not implemented.');
+        throw new Error('Model.createManyFromResponse() not implemented.');
     }
 
     /**

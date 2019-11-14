@@ -91,8 +91,8 @@ url: http://127.0.0.1:8080/receiptItems,
 body: {
     "receiptItem": {
         "_id": "5db62f14daeeec4704e6ba1b",
-        "receiptId": "5db62f14daeeec4704e6ba19",
-        "systemItemId": "5db62f14daeeec4704e6ba1a",
+        "_receiptId": "5db62f14daeeec4704e6ba19",
+        "_systemItemId": "5db62f14daeeec4704e6ba1a",
         "name": "banana",
         "price": 15,
         "quantity": 10,
@@ -119,8 +119,8 @@ url: http://127.0.0.1:8080/receiptItems/5db62f14daeeec4704e6ba1b
 {
     "receiptItem": {
         "_id": "5db62f14daeeec4704e6ba1b",
-        "receiptId": "5db62f14daeeec4704e6ba19",
-        "systemItemId": "5db62f14daeeec4704e6ba1a",
+        "_receiptId": "5db62f14daeeec4704e6ba19",
+        "_systemItemId": "5db62f14daeeec4704e6ba1a",
         "name": "banana",
         "price": 15,
         "quantity": 10,
@@ -139,7 +139,7 @@ url: http://127.0.0.1:8080/receiptItems/5db62f14daeeec4704e6ba1b
 url: http://127.0.0.1:8080/receiptItems/5db62f14daeeec4704e6ba1b,
 body: {
     "receiptItem": {
-        "systemItemId": "6ab62f14daeeec4704e6ba1a",
+        "_systemItemId": "6ab62f14daeeec4704e6ba1a",
         "name": "watermelon",
         "price": 13,
         "quantity": 2
@@ -153,8 +153,8 @@ body: {
 {
     "receiptItem": {
         "_id": "5db62f14daeeec4704e6ba1b",
-        "receiptId": "5db62f14daeeec4704e6ba19",
-        "systemItemId": "6ab62f14daeeec4704e6ba1a",
+        "_receiptId": "5db62f14daeeec4704e6ba19",
+        "_systemItemId": "6ab62f14daeeec4704e6ba1a",
         "name": "watermelon",
         "price": 13,
         "quantity": 2,

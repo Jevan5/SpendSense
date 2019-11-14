@@ -116,18 +116,18 @@ export class LoadableComponent implements OnInit {
    * @param message Loading message.
    * @returns Resolves when the loading message has been changed.
    */
-  public async setLoadingMessage(message: string): Promise<void> {
+  public setLoadingMessage(message: string): Promise<void> {
     return this.setMessage(message, this.StateEnum.LOADING);
   }
 
   /**
    * Sets the error message. Ensures the loading spinner is dismissed
-   * before setting the error message.
+   * before setting the error message. Also logs the message to console.
    * @param message Error message.
    * @returns Resolves when the error message has been changed.
    */
-  public async setErrorMessage(message: string): Promise<void> {
-    this.setMessage(message, this.StateEnum.ERRORED);
+  public setErrorMessage(message: string): Promise<void> {
+    return this.setMessage(message, this.StateEnum.ERRORED);
   }
 
   /**
@@ -137,7 +137,7 @@ export class LoadableComponent implements OnInit {
    * @param message Success message.
    * @returns Resolves when the success message has been changed.
    */
-  public async setSuccessMessage(message: string): Promise<void> {
+  public setSuccessMessage(message: string): Promise<void> {
     return this.setMessage(message, this.StateEnum.SUCCEEDED);
   }
 
@@ -147,36 +147,42 @@ export class LoadableComponent implements OnInit {
    * @param message Warning message.
    * @returns Resolves when the warning message has been changed.
    */
-  public async setWarningMessage(message: string): Promise<void> {
+  public setWarningMessage(message: string): Promise<void> {
     return this.setMessage(message, this.StateEnum.WARNED);
   }
 
   /**
-   * Sets the appropriate state's message.
+   * Sets the appropriate state's message. If error, logs
+   * the error to console.
    * @param message Message.
    * @param state State to set the message of.
    * @returns The previous value of the state's message.
    */
   private async setMessage(message: string, state: number): Promise<void> {
-    var oldState = this.state;
     this.state = state;
     this.message = message;
 
-    if (oldState == this.StateEnum.LOADING) {
-      this.loader = await this.loadingController.create({
-        message: message
-      });
-
-      await this.loader.present();
+    if (state == this.StateEnum.LOADING) {
+      if (this.loader != null) {
+        await this.loader.setAttribute('message', message);
+      } else {
+        this.loader = await this.loadingController.create({
+          message: message
+        });
+  
+        await this.loader.present();
+      }
     } else {
       if (this.loader != null) {
         await this.loader.dismiss();
+        this.loader = null;
       }
 
-      if ([this.StateEnum.SUCCEEDED, this.StateEnum.WARNED, this.StateEnum.ERRORED].indexOf(oldState) >= 0) {
+      if ([this.StateEnum.SUCCEEDED, this.StateEnum.WARNED, this.StateEnum.ERRORED].indexOf(state) >= 0) {
         var color;
+        var duration = 3000;
 
-        switch(oldState) {
+        switch(state) {
           case this.StateEnum.SUCCEEDED:
             color = 'success';
             break;
@@ -185,12 +191,14 @@ export class LoadableComponent implements OnInit {
             break;
           case this.StateEnum.ERRORED:
             color = 'danger';
+            duration = 6000;
+            console.log(message);
             break;
         }
 
         this.toast = await this.toastController.create({
           message: message,
-          duration: 3000,
+          duration: duration,
           color: color,
           showCloseButton: true
         });
@@ -204,7 +212,7 @@ export class LoadableComponent implements OnInit {
    * Clears the active message.
    * @returns Resolves when the message has been cleared.
    */
-  public async clearMessage(): Promise<void> {
+  public clearMessage(): Promise<void> {
     return this.setMessage('', this.StateEnum.NONE);
   }
 }

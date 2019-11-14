@@ -22,7 +22,7 @@ export class AppComponent {
   ) {
     this.initializeApp();
 
-    var loggedInURLs = ['/profile'];
+    var loggedInURLs = ['/profile', '/reports', '/search'];
     var loggedOutURLs = ['/login'];
     // Can't navigate to login page if they're logged in
     this.router.events.subscribe((event) => {

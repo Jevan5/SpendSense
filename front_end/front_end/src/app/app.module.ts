@@ -18,6 +18,12 @@ import { LoginComponent } from './pages/login/login.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { ManualEntryComponent } from './pages/manual-entry/manual-entry.component';
+import { UploadImageComponent } from './pages/upload-image/upload-image.component';
+
+//import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
+//import { File } from '@ionic-native/file';
+//import { Camera } from '@ionic-native/camera';
 
 @NgModule({
   declarations: [
@@ -25,7 +31,9 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     HomeComponent,
     LoginComponent,
     NavbarComponent,
-    ProfileComponent
+    ProfileComponent,
+    ManualEntryComponent,
+    UploadImageComponent
   ],
   entryComponents: [],
   imports: [
@@ -36,7 +44,9 @@ import { NavbarComponent } from './components/navbar/navbar.component';
       { path: '', component: HomeComponent },
       { path: 'home', component: HomeComponent },
       { path: 'login', component: LoginComponent },
-      { path: 'profile', component: ProfileComponent }
+      { path: 'profile', component: ProfileComponent },
+      { path: 'manual-entry', component: ManualEntryComponent},
+      { path: 'upload-image', component: UploadImageComponent}
     ]),
     HttpClientModule,
     NgbModule,
@@ -47,7 +57,12 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    { provide: Storage, useValue: new Storage({}) }
+    { provide: Storage, useValue: new Storage({}) },
+    //FileTransfer,
+    //FileUploadOptions,
+    //FileTransferObject,
+    //File,
+    //Camera
   ],
   bootstrap: [AppComponent]
 })

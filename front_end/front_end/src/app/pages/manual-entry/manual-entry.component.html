@@ -1,0 +1,49 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+    <ion-title>Manual Receipt Entry</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <form lines = 'full' (ngSubmit)=manualentry(form)>
+      <ion-item>
+        <ion-label>Name:<ion-text color='danger'>* </ion-text></ion-label>
+        <ion-input required type="text" placeholder="Enter Vendor Name"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Address:<ion-text color='danger'>* </ion-text></ion-label>
+        <ion-input type="text" placeholder="Enter Address"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Date:<ion-text color='danger'>* </ion-text></ion-label>
+        <ion-datetime slot="end" placeholder="Select Date"></ion-datetime>
+      </ion-item>
+      
+      <ion-item-sliding *ngFor="let entry of items, let entry = index">
+        <ion-item>
+          <ion-label>Item: </ion-label>
+          <ion-input type="text" placeholder="Enter Item"></ion-input>
+          <ion-label>Price: </ion-label>
+          <ion-input type="decimal" placeholder="$0.00"></ion-input>
+        </ion-item>
+        
+        <ion-item-options side="start">
+          <ion-button id="entry" color ="danger"(click)="delete(entry)"><ion-icon name="trash"></ion-icon> Delete</ion-button>
+        </ion-item-options>
+      </ion-item-sliding>
+
+      <div class='ion-padding'>
+        <ion-button (click)="newItem()">Add New Item</ion-button>
+        
+        <ion-button (click)="submit()" color="tertiary">Submit</ion-button>
+      </div>
+    </form>
+  </ion-list>
+</ion-content>
+
+
+

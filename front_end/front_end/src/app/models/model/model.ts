@@ -114,6 +114,7 @@ export abstract class Model {
      * Creates the model from a response originating from the back end.
      * Will ensure the structure of the response.
      * @param response Response from the backend.
+     * @param modelClass Class of the model.
      * @returns The model.
      */
     public static createOneFromResponse(response: any, modelClass): Model {
@@ -124,6 +125,7 @@ export abstract class Model {
      * Creates models from a response originating from the back end.
      * Will ensure the structure of the response.
      * @param response Response from the backend.
+     * @param modelClass Class of the model.
      * @returns The models.
      */
     public static createManyFromResponse(response: any, modelClass): Array<Model> {
@@ -141,11 +143,6 @@ export abstract class Model {
      * @returns An array of models from the response.
      */
     private static createFromResponse(response: any, modelClass, multiple: boolean): Array<Model> {
-        console.log('\n\n\nresponse:');
-        console.log(response);
-        console.log('modelClass:');
-        console.log(modelClass);
-        console.log('multiple = ' + multiple ? 'T' : 'F');
         if (response == null) {
             throw new Error('response is null.');
         }

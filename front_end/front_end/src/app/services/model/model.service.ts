@@ -19,7 +19,7 @@ export class ModelService {
    */
   public getOne(id: string, modelClass): Promise<Model> {
     return new Promise((resolve, reject) => {
-      this.http.get('http://' + environment.backEndIp + ':' + environment.backEndPort + '/' + modelClass.getModelName() + 's/' + id)
+      this.http.get('http://' + environment.backEndIp + ':' + environment.backEndPort + '/' + modelClass.getModelName() + 's/' + id, this.authenticationService.getAuthorizationHeader())
       .subscribe((data) => {
         try {
           var model = modelClass.createOneFromResponse(data);
@@ -29,7 +29,7 @@ export class ModelService {
           reject(e);
         }
       }, (err) => {
-        reject(err);
+        reject(err.error);
       });
     });
   }
@@ -37,22 +37,33 @@ export class ModelService {
   /**
    * Gets all the models for a model class.
    * @param modelClass Class of the Model to retrieve.
+   * @param queryParameters Mapping from query parameters to their values.
    * @returns Resolves with the retrieved models.
    */
-  public getAll(modelClass): Promise<Array<Model>> {
+  public getAll(modelClass, queryParameters: Map<string, string> = new Map<string, string>()): Promise<Array<Model>> {
     return new Promise((resolve, reject) => {
-      this.http.get('http://' + environment.backEndIp + ':' + environment.backEndPort + '/' + modelClass.getModelName() + 's')
-      .subscribe((data) => {
-        try {
-          var models = modelClass.createManyFromResponse(data);
+      try {
+        var paramsString = '?';
 
-          resolve(models);
-        } catch (e) {
-          reject(e);
-        }
-      }, (err) => {
-        reject(err);
-      });
+        queryParameters.forEach((value, key) => {
+          paramsString += key + '=' + value + '&';
+        });
+
+        this.http.get('http://' + environment.backEndIp + ':' + environment.backEndPort + '/' + modelClass.getModelName() + 's/' + paramsString, this.authenticationService.getAuthorizationHeader())
+        .subscribe((data) => {
+          try {
+            var models = modelClass.createManyFromResponse(data);
+
+            resolve(models);
+          } catch (e) {
+            reject(e);
+          }
+        }, (err) => {
+          reject(err.error);
+        });
+      } catch (e) {
+        reject(e);
+      }
     });
   }
 
@@ -82,7 +93,7 @@ export class ModelService {
             reject(e);
           }
         }, (err) => {
-          reject(err);
+          reject(err.error);
         });
     });
   }
@@ -95,7 +106,7 @@ export class ModelService {
    */
   public deleteOne(id: string, modelClass): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.http.delete('http://' + environment.backEndIp + ':' + environment.backEndPort + '/' + modelClass.getModelName() + 's/' + id)
+      this.http.delete('http://' + environment.backEndIp + ':' + environment.backEndPort + '/' + modelClass.getModelName() + 's/' + id, this.authenticationService.getAuthorizationHeader())
       .subscribe((data) => {
         try {
           resolve();
@@ -103,7 +114,7 @@ export class ModelService {
           reject(e);
         }
       }, (err) => {
-        reject(err);
+        reject(err.error);
       });
     })
   }

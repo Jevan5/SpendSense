@@ -16,6 +16,7 @@ module.exports = class Logger {
      * Generates a message indicating that a value does not exist.
      * @param {string} value Value which does not exist.
      * @param {string} descriptor Descriptor of the value.
+     * @returns {string} Message indicating that a value does not exist.
      */
     static valueNotExistMessage(value, descriptor = '_id') {
         return descriptor + " (" + value + ") does not exist.";
@@ -27,6 +28,7 @@ module.exports = class Logger {
      * @param {string} descriptor1 Descriptor of the first value.
      * @param {string} value2 The second value.
      * @param {string} descriptor2 Descriptor of the second value.
+     * @returns {string} Message indicating that the two values do not match.
      */
     static valuesDontMatchMessage(value1, descriptor1, value2, descriptor2) {
         return descriptor1 + " (" + value1 + ") does not match " + descriptor2 + " (" + value2 + ").";
@@ -46,5 +48,14 @@ module.exports = class Logger {
      */
     static isRequiredMessage() {
         return 'Is required';
+    }
+
+    /**
+     * Generates a message indicating that a field is missing.
+     * @param {string} field Field which is missing.
+     * @returns {string} Message indicating that a field is missing.
+     */
+    static fieldMissingMessage(field) {
+        return "'" + field + "' is missing.";
     }
 };

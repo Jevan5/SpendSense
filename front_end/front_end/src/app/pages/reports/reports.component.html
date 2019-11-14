@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Report</ion-title>
+  </ion-toolbar>
+</ion-header>
+  
+<ion-content>
+  <div class='ion-padding'>
+    <ngb-tabset [justify]='justified'>
+      <ngb-tab>
+        <ng-template ngbTabTitle>
+          <div (click)='reloadChartsForTab(TabEnum.BY_TAG)'>{{TabEnum.BY_TAG}}</div>
+        </ng-template>
+        <ng-template ngbTabContent>
+          <ion-list>
+            <ion-item>
+              <ion-label>Start Date</ion-label>
+              <ion-datetime [(ngModel)]='model.startDate' (ngModelChange)='reloadChartsForTab(TabEnum.BY_TAG)'></ion-datetime>
+            </ion-item>
+            <ion-item>
+              <ion-label>End Date</ion-label>
+              <ion-datetime [(ngModel)]='model.endDate' (ngModelChange)='reloadChartsForTab(TabEnum.BY_TAG)'></ion-datetime>
+            </ion-item>
+          </ion-list>
+          <canvas #byTagCanvas></canvas>
+        </ng-template>
+      </ngb-tab>
+      <ngb-tab>
+        <ng-template ngbTabTitle>
+          <div (click)='reloadChartsForTab(TabEnum.OVER_TIME)'>{{TabEnum.OVER_TIME}}</div>
+        </ng-template>
+        <ng-template ngbTabContent>
+          <ion-list>
+            <ion-item>
+              <ion-label>Start Date</ion-label>
+              <ion-datetime [(ngModel)]='model.startDate' (ngModelChange)='reloadChartsForTab(TabEnum.OVER_TIME)'></ion-datetime>
+            </ion-item>
+            <ion-item>
+              <ion-label>End Date</ion-label>
+              <ion-datetime [(ngModel)]='model.endDate' (ngModelChange)='reloadChartsForTab(TabEnum.OVER_TIME)'></ion-datetime>
+            </ion-item>
+          </ion-list>
+          <canvas #overTimeCanvas></canvas>
+        </ng-template>
+      </ngb-tab>
+    </ngb-tabset>
+  </div>
+</ion-content>

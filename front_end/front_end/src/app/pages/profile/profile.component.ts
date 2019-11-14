@@ -41,32 +41,31 @@ export class ProfileComponent extends LoadableComponent implements OnInit {
    * Saves information changes for the user.
    */
   public save(): Promise<User> {
+    console.log('save called');
     return new Promise((resolve, reject) => {
-      if (this.model.email == '') {
-        var message = "'email' must be non-empty.";
-        return this.setErrorMessage(message).then(() => {
-          reject(message);
-        }).catch((err) => {
-          reject(err);
-        });
-      }
-      
-      var user = this.authenticationService.getUser();
-  
       var tryingToChangeEmail;
-  
-      if (user.getValue('email').toLowerCase() == this.model.email.toLowerCase()) {
-        tryingToChangeEmail = false;
-      } else {
-        tryingToChangeEmail = true;
-      }
-  
       var newEmail = this.model.email;
-  
-      user.setValues(this.model);
-      user.setValue('changingEmail', this.model.email);
-  
-      this.modelService.save(user).then((user) => {
+      this.setLoadingMessage('Saving user information').then(() => {
+        console.log('checking email');
+        if (this.model.email == '') {
+          console.log('empty');
+          throw new Error("'email' must be non-empy.");
+        }
+        console.log('not empty');
+
+        var user = this.authenticationService.getUser();
+
+        if (user.getValue('email').toLowerCase() == this.model.email.toLowerCase()) {
+          tryingToChangeEmail = false;
+        } else {
+          tryingToChangeEmail = true;
+        }
+
+        user.setValues(this.model);
+        user.setValue('changingEmail', this.model.email);
+
+        return this.modelService.save(user);
+      }).then((user) => {
         return this.authenticationService.refreshUser();
       }).then((refreshedUser) => {
         this.model = {
@@ -87,6 +86,7 @@ export class ProfileComponent extends LoadableComponent implements OnInit {
         this.toggleEditing();
         resolve(this.authenticationService.getUser());
       }).catch((err) => {
+        console.log(err);
         this.setErrorMessage(err);
         reject(err);
       });

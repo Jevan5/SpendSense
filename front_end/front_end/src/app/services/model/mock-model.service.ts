@@ -49,12 +49,12 @@ export class MockModelService {
     public save(model: Model): Promise<Model> {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
-                if (this.tables[model.getClass()] == null) {
-                    this.tables[model.getClass()] = {};
+                if (this.tables[model.class] == null) {
+                    this.tables[model.class] = {};
                 }
 
                 if (model.hasField('_id')) {    // Updating
-                    if (this.tables[model.getClass()][model.getValue('_id')] == null) {
+                    if (this.tables[model.class][model.getValue('_id')] == null) {
                         return reject('[' + model.getValue('_id') + '] does not exist.');
                     }
                 } else {    // Creating new
@@ -62,7 +62,7 @@ export class MockModelService {
                     this.nextId += 1;
                 }
 
-                this.tables[model.getClass()][model.getValue('_id')] = model;
+                this.tables[model.class][model.getValue('_id')] = model;
 
                 resolve(model);
             }, 100);

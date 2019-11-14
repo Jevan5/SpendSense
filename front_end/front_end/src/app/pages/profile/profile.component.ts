@@ -41,17 +41,13 @@ export class ProfileComponent extends LoadableComponent implements OnInit {
    * Saves information changes for the user.
    */
   public save(): Promise<User> {
-    console.log('save called');
     return new Promise((resolve, reject) => {
       var tryingToChangeEmail;
       var newEmail = this.model.email;
       this.setLoadingMessage('Saving user information').then(() => {
-        console.log('checking email');
         if (this.model.email == '') {
-          console.log('empty');
           throw new Error("'email' must be non-empy.");
         }
-        console.log('not empty');
 
         var user = this.authenticationService.getUser();
 
@@ -81,14 +77,17 @@ export class ProfileComponent extends LoadableComponent implements OnInit {
           message += ' Please check ' + newEmail + ' for a link to confirm your new email.';
         }
   
+        this.editing = false;
         return this.setSuccessMessage(message);
       }).then(() => {
-        this.toggleEditing();
         resolve(this.authenticationService.getUser());
       }).catch((err) => {
-        console.log(err);
-        this.setErrorMessage(err);
-        reject(err);
+        this.editing = true;
+        this.setErrorMessage(err).then(() => {
+          reject(err);
+        }).catch((e) => {
+          reject(e);
+        });
       });
     });
   }

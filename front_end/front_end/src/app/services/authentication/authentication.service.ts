@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../../models/user/user';
 import { environment } from '../../../environments/environment';
-import { Observable } from 'rxjs';
 import { Storage } from '@ionic/storage';
+import { Model } from 'src/app/models/model/model';
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +37,7 @@ export class AuthenticationService {
         })
       }).subscribe((data: any) => {
         try {
-          this.user = User.createOneFromResponse(data);
+          this.user = Model.createOneFromResponse(data, User);
           this.password = password;
 
           this.storage.set('username', username).then(() => {
@@ -51,7 +51,7 @@ export class AuthenticationService {
           reject(e);
         }
       }, (err) => {
-        reject(err);
+        reject(err.error);
       });
     });
   }
@@ -93,12 +93,12 @@ export class AuthenticationService {
         }
       }).subscribe((data: any) => {
         try {
-          resolve(User.createOneFromResponse(data));
+          resolve(Model.createOneFromResponse(data, User));
         } catch (e) {
           reject(e);
         }
       }, (err) => {
-        reject(err);
+        reject(err.error);
       });
     });
   }
@@ -118,12 +118,12 @@ export class AuthenticationService {
         }
       }).subscribe((data: any) => {
         try {
-          resolve(User.createOneFromResponse(data));
+          resolve(Model.createOneFromResponse(data, User));
         } catch (e) {
           reject(e);
         }
       }, (err) => {
-        reject(err);
+        reject(err.error);
       });
     });
   }

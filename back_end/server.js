@@ -5,6 +5,7 @@ const bodyParser    = require('body-parser');
 const router        = express.Router();
 const environment   = require('./environment');
 const cryptoHelper 	= require('./tools/cryptoHelper');
+const updateLocationItems	= require('./jobs/updateLocationItems');
 
 mongoose.connect('mongodb://localhost:27017/' + environment.db, {
     useNewUrlParser: true,
@@ -45,6 +46,9 @@ app.use('/receiptItems', receiptItems);
 app.use('/receipts', receipts);
 app.use('/systemItems', systemItems);
 app.use('/users', users);
+
+// Update location items once per day
+updateLocationItems.startJob(1000 * 60 * 60 * 24);
 
 app.listen(environment.port);
 console.log('Listening on ' + environment.port);

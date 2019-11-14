@@ -10,18 +10,22 @@ const LocationItemSchema = new Schema({
         required: [true, logger.isRequiredMessage()],
         ref: 'Location',
         unique: false
-    }, _receiptItemId: {
-        type: Schema.Types.ObjectId,
+    }, name: {
+        type: String,
         required: [true, logger.isRequiredMessage()],
-        ref: 'ReceiptItem',
         unique: false
-    }, lastPurchased: {
-        type: Date,
-        required: [true, logger.isRequiredMessage()]
+    }, tag: {
+        type: String,
+        required: [true, logger.isRequiredMessage()],
+        unique: false
+    }, price: {
+        type: Number,
+        required: [true, logger.isRequiredMessage()],
+        unique: false
     }
 });
 
-LocationItemSchema.index({ _locationId: 1, _receiptItemId: 1 }, { unique: true });
+LocationItemSchema.index({ name: 1, tag: 1, _locationId: 1 }, { unique: true });
 
 LocationItemSchema.pre('save', function(next) {
     Location.findById(this._locationId).then((location) => {

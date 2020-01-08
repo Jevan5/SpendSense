@@ -2,6 +2,7 @@ import { ValueAccessor } from '@ionic/angular/dist/directives/control-value-acce
 
 export abstract class Model {
     private values: Map<string, any>;
+    public abstract readonly class;
 
     constructor() {
         this.values = new Map<string, any>();
@@ -86,34 +87,127 @@ export abstract class Model {
     }
 
     /**
+     * Returns a deep copy of this model.
+     * @returns Deep copy of this model.
+     */
+    public deepCopy(): Model {
+        var copied: Model = new this.class();
+
+        this.class.getFields().forEach((field: string) => {
+            if (this.hasField(field)) {
+                copied.setValue(field, this.getValue(field));
+            }
+        });
+
+        return copied;
+    }
+
+    /**
+     * Gets the fields for the saved model.
+     * @returns The fields for the saved model.
+     */
+    public static getFields(): Array<string> {
+        throw new Error('Model.getFields() is not implemented.');
+    }
+
+    /**
      * Creates the model from a response originating from the back end.
      * Will ensure the structure of the response.
      * @param response Response from the backend.
-     * @param model Model to create.
+     * @param modelClass Class of the model.
      * @returns The model.
      */
-    public static createOneFromResponse(response: any, model: Model): Model {
-        throw new Error('Model.createOneFromResponse() is not implemented.');
+    public static createOneFromResponse(response: any, modelClass): Model {
+        return Model.createFromResponse(response, modelClass, false)[0];
     }
 
     /**
      * Creates models from a response originating from the back end.
      * Will ensure the structure of the response.
      * @param response Response from the backend.
+     * @param modelClass Class of the model.
      * @returns The models.
      */
-    public static createManyFromResponse(response: any): Array<Model> {
-        throw new Error('Model.createManyFromResponse() not implemented.');
+    public static createManyFromResponse(response: any, modelClass): Array<Model> {
+        return Model.createFromResponse(response, modelClass, true);
     }
 
     /**
-     * Returns a deep copy of this model.
+     * Creates models from a response. Throws an error
+     * if the response is null, does not have the
+     * required model name as a field, or contains invalid
+     * fields.
+     * @param response Response to validate.
+     * @param modelClass Class of the model.
+     * @param multiple True if the response is for multiple documents.
+     * @returns An array of models from the response.
      */
-    public abstract deepCopy(): Model;
+    private static createFromResponse(response: any, modelClass, multiple: boolean): Array<Model> {
+        if (response == null) {
+            throw new Error('response is null.');
+        }
 
-    /**
-     * Gets the class of the model.
-     * @returns The class of the model.
-     */
-    public abstract getClass();
+        var modelField = modelClass.getModelName();
+
+        if (multiple) {
+            modelField += 's';
+        }
+
+        if (response[modelField] == null) {
+            throw new Error("response." + modelField + " is null.");
+        }
+
+        var data = response[modelField];
+        var elements = [];
+
+        if (multiple) {
+            if (!Array.isArray(data)) {
+                throw new Error("response." + modelField + " is not an array.");
+            }
+
+            elements = data;
+        } else {
+            elements.push(data);
+        }
+
+        var requiredFields = new Set<string>(modelClass.getFields());
+
+        var models = [];
+
+        for (var i = 0; i < elements.length; i++) {
+            
+        }
+
+        elements.forEach((element, index) => {
+            var model = new modelClass();
+
+            modelClass.getFields().forEach((field: string) => {
+                if (!element.hasOwnProperty(field)) {
+                    if (multiple) {
+                        throw new Error("response." + modelField + "[" + index + "]." + field + " is missing.");
+                    } else {
+                        throw new Error("response." + modelField + "." + field + " is missing.");
+                    }
+                }
+
+                model.setValue(field, element[field]);
+            });
+
+            for (var key in element) {
+                if (element.hasOwnProperty(key)) {
+                    if (!requiredFields.has(key)) {
+                        if (multiple) {
+                            throw new Error("response." + modelField + "[" + index + "]." + key + " should not exist.");
+                        } else {
+                            throw new Error("response." + modelField + "." + key + " should not exist.");
+                        }
+                    }
+                }
+            }
+
+            models.push(model);
+        });
+
+        return models;
+    }
 };

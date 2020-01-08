@@ -62,7 +62,7 @@ export class LoginComponent extends LoadableComponent implements OnInit {
       this.clearValues();
       this.router.navigate(['home']);
     }).catch((err) => {
-      this.setErrorMessage(err.error);
+      this.setErrorMessage(err);
     });
   }
 

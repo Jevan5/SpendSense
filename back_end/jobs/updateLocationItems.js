@@ -1,7 +1,7 @@
-const LocationItem  = require('../models/locationItem');
-const Receipt       = require('../models/receipt');
-const ReceiptItem   = require('../models/receiptItem');
-const SystemItem    = require('../models/systemItem');
+const LocationItem  = require('../models/locationItem/locationItem');
+const Receipt       = require('../models/receipt/receipt');
+const ReceiptItem   = require('../models/receiptItem/receiptItem');
+const SystemItem    = require('../models/systemItem/systemItem');
 const logger        = require('../tools/logger');
 
 module.exports = class UpdateLocationItems {

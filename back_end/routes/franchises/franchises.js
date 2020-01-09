@@ -1,6 +1,6 @@
 const express       = require('express');
 const router        = express.Router();
-const Franchise     = require('../../models/franchise');
+const Franchise     = require('../../models/franchise/franchise');
 const authorizer    = require('../../tools/authorizer');
 const promiseHelper = require('../../tools/promiseHelper');
 const logger        = require('../../tools/logger');

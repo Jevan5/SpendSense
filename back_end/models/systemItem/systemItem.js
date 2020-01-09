@@ -1,6 +1,6 @@
 const mongoose  = require('mongoose');
 const Schema    = mongoose.Schema;
-const logger    = require('../tools/logger');
+const logger    = require('../../tools/logger');
 
 const SystemItemSchema = new Schema({
     tag: {

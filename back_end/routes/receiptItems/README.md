@@ -9,7 +9,7 @@ A receipt item is an item on a receipt.
     "_systemItemId": string,
     "name": string,
     "price": number,
-    "quantity": number,
+    "amount": number,
     "__v": number
 }
 ```
@@ -24,7 +24,7 @@ A receipt item is an item on a receipt.
 
 `price` Price that appears on the receipt for this receipt item.
 
-`quantity` Quantity that appears on the receipt for this receipt item.
+`amount` Amount in kilograms that appears on the receipt for this receipt item.
 
 `__v` Version number of the receipt item. Non-modifiable.
 
@@ -51,7 +51,7 @@ url: http://127.0.0.1:8080/receiptItems
             "systemItemId": "5db62f14daeeec4704e6ba1a",
             "name": "banana",
             "price": 1.5,
-            "quantity": 6
+            "amount": 6
         },
         {
             "_id": "5db62f14daeeec4704e6ba1c",
@@ -59,7 +59,7 @@ url: http://127.0.0.1:8080/receiptItems
             "systemItemId": "5db62f14daeeec4704e6ba1e",
             "name": "apple",
             "price": 1.2,
-            "quantity": 4
+            "amount": 4
         }
     ]
 }
@@ -79,7 +79,7 @@ body: {
         "systemItemId": "5db62f14daeeec4704e6ba1a",
         "name": "banana",
         "price": 15,
-        "quantity": 10
+        "amount": 10
     }
 }
 ```
@@ -95,7 +95,7 @@ body: {
         "_systemItemId": "5db62f14daeeec4704e6ba1a",
         "name": "banana",
         "price": 15,
-        "quantity": 10,
+        "amount": 10,
         "__v": 0
     }
 }
@@ -123,7 +123,7 @@ url: http://127.0.0.1:8080/receiptItems/5db62f14daeeec4704e6ba1b
         "_systemItemId": "5db62f14daeeec4704e6ba1a",
         "name": "banana",
         "price": 15,
-        "quantity": 10,
+        "amount": 10,
         "__v": 0
     }
 }
@@ -142,7 +142,7 @@ body: {
         "_systemItemId": "6ab62f14daeeec4704e6ba1a",
         "name": "watermelon",
         "price": 13,
-        "quantity": 2
+        "amount": 2
     }
 }
 ```
@@ -157,7 +157,7 @@ body: {
         "_systemItemId": "6ab62f14daeeec4704e6ba1a",
         "name": "watermelon",
         "price": 13,
-        "quantity": 2,
+        "amount": 2,
         "__v": 1
     }
 }

@@ -70,6 +70,12 @@ npm i
 node server.js <mode>
 ```
 
+#### Google Application Credentials
+
+Before running the backend server, for receipt scanning functionality your local variable for `GOOGLE_APPLICATION_CREDENTIALS` must be set to your credentials file.
+
+For more information for local setup, or how to generate your credentials file, check the Google API documentation, [see here](https://cloud.google.com/vision/docs/quickstart-client-libraries).
+
 ### Secrets.json
 
 In the root of the project (same location as this README), a `secrets.json` file is required, with the following info (values must be filled out locally):

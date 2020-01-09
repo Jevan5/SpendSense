@@ -1,6 +1,6 @@
 const mongoose          = require('mongoose');
 const Schema            = mongoose.Schema;
-const logger            = require('../tools/logger');
+const logger            = require('../../tools/logger');
 const uniqueValidator   = require('mongoose-unique-validator');
 
 const FranchiseSchema = new Schema({
@@ -10,6 +10,8 @@ const FranchiseSchema = new Schema({
         required: [true, logger.isRequiredMessage()],
         unique: true
     }
+}, {
+    strict: true
 });
 
 FranchiseSchema.plugin(uniqueValidator, { message: logger.alreadyExistsMessage() });

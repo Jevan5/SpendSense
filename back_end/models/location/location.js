@@ -1,7 +1,7 @@
 const mongoose  = require('mongoose');
 const Schema    = mongoose.Schema;
-const Franchise = require('./franchise');
-const logger    = require('../tools/logger');
+const Franchise = require('../franchise/franchise');
+const logger    = require('../../tools/logger');
 
 const LocationSchema = new Schema({
     _franchiseId: {
@@ -23,6 +23,8 @@ const LocationSchema = new Schema({
         required: [true, logger.isRequiredMessage()],
         unique: false
     }
+}, {
+    strict: true
 });
 
 LocationSchema.index({ _franchiseId: 1, city: 1, address: 1, country: 1 }, { unique: true });

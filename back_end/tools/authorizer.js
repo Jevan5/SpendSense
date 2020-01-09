@@ -1,5 +1,5 @@
 const cryptoHelper = require('./cryptoHelper');
-const User = require('../models/user');
+const User = require('../models/user/user');
 
 module.exports = class Authorizer {
     /**

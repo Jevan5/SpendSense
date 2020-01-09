@@ -1,9 +1,6 @@
 const mongoose      = require('mongoose');
 const Schema        = mongoose.Schema;
-const ReceiptItem   = require('./receiptItem');
-const User          = require('./user');
-const Location      = require('./location');
-const logger        = require('../tools/logger');
+const logger        = require('../../tools/logger');
 
 const ReceiptSchema = new Schema({
     _userId: {
@@ -19,13 +16,17 @@ const ReceiptSchema = new Schema({
         type: Date,
         required: [true, logger.isRequiredMessage()]
     }
+}, {
+    strict: true
 });
 
-ReceiptSchema.pre('remove', function(next) {
-    ReceiptItem.deleteMany({ _receiptId: this._id }).then(() => {
+ReceiptSchema.pre('remove', { query: true }, function(next) {
+    ReceiptItem.find({ _receiptId: this._id }).then((r) => {
+        r.forEach((receiptItem) => {
+            receiptItem.remove();
+        });
+
         next();
-    }).catch((err) => {
-        next(err);
     });
 });
 
@@ -54,3 +55,8 @@ ReceiptSchema.pre('save', function(next) {
 });
 
 module.exports = mongoose.model('Receipt', ReceiptSchema);
+
+
+const ReceiptItem   = require('../receiptItem/receiptItem');
+const User          = require('../user/user');
+const Location      = require('../location/location');

@@ -7,31 +7,35 @@ const logger        = require('../tools/logger');
 const LocationItemSchema = new Schema({
     _locationId: {
         type: Schema.Types.ObjectId,
-        required: true,
+        required: [true, logger.isRequiredMessage()],
         ref: 'Location',
         unique: false
-    }, _receiptItemId: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: 'ReceiptItem',
+    }, name: {
+        type: String,
+        required: [true, logger.isRequiredMessage()],
         unique: false
-    }, lastPurchased: {
-        type: Date,
-        required: true
+    }, tag: {
+        type: String,
+        required: [true, logger.isRequiredMessage()],
+        unique: false
+    }, price: {
+        type: Number,
+        required: [true, logger.isRequiredMessage()],
+        unique: false
     }
 });
 
-LocationItemSchema.index({ _locationId: 1, _receiptItemId: 1 }, { unique: true });
+LocationItemSchema.index({ name: 1, tag: 1, _locationId: 1 }, { unique: true });
 
-LocationItemSchema.pre('save', (locationItem) => {
-    return new Promise((resolve, reject) => {
-        Location.findById(locationItem._locationId).then((location) => {
-            if (!location) {
-                reject(logger.valueNotExistMessage(locationItem._locationId, '_locationId'));
-            }
+LocationItemSchema.pre('save', function(next) {
+    Location.findById(this._locationId).then((location) => {
+        if (!location) {
+            throw new Error(logger.valueNotExistMessage(this._locationId, '_locationId'));
+        }
 
-            resolve();
-        })
+        next();
+    }).catch((err) => {
+        next(err);
     });
 });
 

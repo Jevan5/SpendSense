@@ -5,6 +5,7 @@ const bodyParser    = require('body-parser');
 const router        = express.Router();
 const environment   = require('./environment');
 const cryptoHelper 	= require('./tools/cryptoHelper');
+const updateLocationItems	= require('./jobs/updateLocationItems');
 
 // handles files in body of POST requests
 var busboy = require('connect-busboy');
@@ -52,6 +53,9 @@ app.use('/receipts', receipts);
 app.use('/systemItems', systemItems);
 app.use('/users', users);
 app.use('/scanReceipt', scanRecept);
+
+// Update location items once per day
+updateLocationItems.startJob(1000 * 60 * 60 * 24);
 
 app.listen(environment.port);
 console.log('Listening on ' + environment.port);

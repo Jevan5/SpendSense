@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+  <ion-list-header>{{authenticationService.getUser().getValue('firstName')}} {{authenticationService.getUser().getValue('lastName')}}</ion-list-header>
+  <ion-avatar class='ion-margin-start'>
+    <img src='../../../assets//defaultUser.svg'>
+  </ion-avatar>
+  <ion-list lines='full' class='ion-no-margin ion-no-padding'>
+    <ion-item>
+      <ion-label position='stacked'>Username</ion-label>
+      <ion-input type='text' disabled [(ngModel)]='model.username'></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position='stacked'>Email</ion-label>
+      <ion-input type='email' disabled='{{!editing}}' [(ngModel)]='model.email'></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position='stacked'>First Name</ion-label>
+      <ion-input type='text' disabled='{{!editing}}' [(ngModel)]='model.firstName'></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position='stacked'>Last Name</ion-label>
+      <ion-input type='text' disabled='{{!editing}}' [(ngModel)]='model.lastName'></ion-input>
+    </ion-item>
+  </ion-list>
+  <div class='ion-padding'>
+    <ion-button *ngIf='!editing' expand='block' class='ion-no-margin' (click)='toggleEditing()'>Edit</ion-button>
+    <ion-button *ngIf='editing' expand='block' class='ion-no-margin' (click)='save()'>Save</ion-button>
+    <br>
+    <ion-button *ngIf='editing' expand='block' class='ion-no-margin' (click)='cancel()'>Cancel</ion-button>
+  </div>
+</ion-content>

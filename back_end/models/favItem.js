@@ -1,61 +1,68 @@
-const mongoose      = require ('mongoose');
-const Schema        = mongoose.Schema;
-const User          = require('./user');
-const Receipt       = require('./receipt');
-const ReceiptItem   = require('./receiptItem');
-const logger        = require('../tools/logger');
-const authorizer    = require('../tools/authorizer');
+const mongoose          = require ('mongoose');
+const Schema            = mongoose.Schema;
+const User              = require('./user');
+const Receipt           = require('./receipt');
+const ReceiptItem       = require('./receiptItem');
+const SystemItem        = require('./systemItem');
+const logger            = require('../tools/logger');
+const authorizer        = require('../tools/authorizer');
+const uniqueValidator   = require('mongoose-unique-validator');
 
 const FavItemSchema = new Schema({
     _userId: {
         type: Schema.Types.ObjectId,
-        required: true,
+        required: [true, logger.isRequiredMessage()],
         ref: 'User',
         unique: false
     }, _receiptItemId: {
         type: Schema.Types.ObjectId,
-        required: true,
+        required: [true, logger.isRequiredMessage()],
         ref: 'ReceiptItem',
         unique: false
     }, _systemItemId: {
         type: Schema.Types.ObjectId,
-        required: true,
+        required: [true, logger.isRequiredMessage()],
         ref: 'SystemItem'
     }
 });
 
 FavItemSchema.index({ _userId: 1, _receiptItemId: 1 }, { unique: true });
 
-FavItemSchema.pre('save', (favItem) => {
-    return new Promise((resolve, reject) => {
-        var user;
-        var receiptItem;
-        User.findById(favItem._userId).then((u) => {
-            user = u;
+FavItemSchema.pre('save', function(next) {
+    var user;
+    var receiptItem;
 
-            if (!user) {
-                throw new Error(logger.valueNotExistMessage(favItem._userId, '_userId'));
-            }
+    User.findById(this._userId).then((u) => {
+        user = u;
 
-            return ReceiptItem.findById(favItem._receiptItemId);
-        }).then((r) => {
-            receiptItem = r;
+        if (!user) {
+            throw new Error(logger.valueNotExistMessage(this._userId, '_userId'));
+        }
 
-            if (!receiptItem) {
-                throw new Error(logger.valueNotExistMessage(favItem._receiptItemId, '_receiptItemId'));
-            }
+        return ReceiptItem.findById(this._receiptItemId);
+    }).then((r) => {
+        receiptItem = r;
 
-            return Receipt.findById(receiptItem._receiptId);
-        }).then((receipt) => {
-            if (!authorizer.idMatches(receipt._userId, favItem._userId)) {
-                throw new Error(logger.valuesDontMatchMessage(favItem._userId, '_userId', receipt._userId, "receipt item's receipt._userId"));
-            }
+        if (!receiptItem) {
+            throw new Error(logger.valueNotExistMessage(this._receiptItemId, '_receiptItemId'));
+        }
 
-            resolve();
-        }).catch((err) => {
-            reject(err);
-        });
+        return Receipt.findById(receiptItem._receiptId);
+    }).then((receipt) => {
+        if (!authorizer.idMatches(receipt._userId, this._userId)) {
+            throw new Error(logger.valuesDontMatchMessage(receipt._userId, 'receipt._userId', this._userId, '_userId'));
+        }
+
+        return SystemItem.findById(this._systemItemId);
+    }).then((systemItem) => {
+        if (!systemItem) {
+            throw new Error(logger.valueNotExistMessage(this._systemItemId, '_systemItemId'));
+        }
+
+        next();
+    }).catch((err) => {
+        next(err);
     });
-})
+});
 
 module.exports = mongoose.model('FavItem', FavItemSchema);

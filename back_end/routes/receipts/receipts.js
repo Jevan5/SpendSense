@@ -24,15 +24,12 @@ router.route('/')
     .post((req, res) => {
         var receipt;
         authorizer.authenticateRequest(req).then((user) => {
-            if (!authorizer.idMatches(req.body.receipt._userId, user._id)) {
-                throw new Error(logger.valuesDontMatchMessage(req.body.receipt._userId, 'receipt._userId', user._id, "authenticated user._id"));
-            }
-
             receipt = new Receipt(req.body.receipt);
+            receipt._userId = user._id;
             
             return receipt.save();
         }).then(() => {
-            receipt.send({ receipt: receipt });
+            res.send({ receipt: receipt });
         }).catch((err) => {
             if (!promiseHelper.hasLeftChain(err)) {
                 res.status(400).send(err.toString());

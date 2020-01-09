@@ -10,14 +10,18 @@ const promiseHelper     = require('../../tools/promiseHelper');
 const logger            = require('../../tools/logger');
 
 router.route('/')
-    // Get all location items
+    // Get all location items matching a queried name
     .get((req, res) => {
         authorizer.authenticateRequest(req).then((user) => {
-            return LocationItem.find();
+            if (req.query.name == null) {
+                throw new Error(logger.fieldMissingMessage('params.name'));
+            }
+
+            return LocationItem.find({ name: req.query.name });
         }).then((locationItems) => {
             res.send({ locationItems: locationItems });
         }).catch((err) => {
-            if (!promiseHelper.hasLeftChain()) {
+            if (!promiseHelper.hasLeftChain(err)) {
                 res.status(400).send(err.toString());
             }
         });

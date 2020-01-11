@@ -3,11 +3,41 @@
       <ion-buttons slot="start">
         <ion-menu-button></ion-menu-button>
       </ion-buttons>
-    <ion-title>Upload an Image from your device</ion-title>
+    <ion-title>Upload an Image </ion-title>
   </ion-toolbar>
 </ion-header>
 
 
+<ion-content padding>
+    <ion-item>
+      <p>{{imageURI}}</p>
+      <ion-icon name="camera"></ion-icon>
+      <ion-input type="file" accept="image/*" (change)="preview(file.files)"></ion-input>
+      <!--<ion-button color="secondary" (click)="getImage()">Get Image</ion-button>onFileSelected($event)-->
+    </ion-item>
+
+    <ion-item>
+      <span style="color:red;" *ngIf="message">{{message}}</span>
+      <input #file type="file" accept='image/*' (change)="preview(file.files)" />
+      <img [src]="imageURL" height="200" *ngIf="imageURL">
+    </ion-item>
+
+    <ion-item>
+      <h4>Image Preview</h4>
+      <img src="{{imageFileName}}" *ngIf="imageFileName" alt="Ionic File" width="300" />
+    </ion-item>
+
+    <ion-item>
+      <ion-icon name="cloud-upload"></ion-icon>
+      <ion-button type="submit" (click)="uploadFile()">Upload</ion-button>
+    </ion-item>
+</ion-content>
+
+
+
+
+
+  
   <!--<ion-content class="ion-padding">
     <img src="{{pathForImage(lastImage)}}" style="width: 100%" [hidden]="lastImage === null">
     <h3 [hidden]="lastImage !== null">Please Select Image!</h3> -->
@@ -26,21 +56,3 @@
 
 </ion-footer>-->
 
-<ion-content padding>
-    <ion-item>
-      <p>{{imageURI}}</p>
-      <ion-icon name="camera"></ion-icon>
-      <ion-button color="secondary" (click)="getImage()">Get Image</ion-button>
-    </ion-item>
-
-    <ion-item>
-      <h4>Image Preview</h4>
-      <img src="{{imageFileName}}" *ngIf="imageFileName" alt="Ionic File" width="300" />
-    </ion-item>
-
-    <ion-item>
-      <ion-icon name="cloud-upload"></ion-icon>
-      <ion-button (click)="uploadFile()">Upload</ion-button>
-    </ion-item>
-
-  </ion-content>

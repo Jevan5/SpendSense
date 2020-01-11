@@ -7,29 +7,48 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content > 
   <ion-list>
-    <form lines = 'full' (ngSubmit)=manualentry(form)>
+    <!-- <form lines = 'full' (ngSubmit)=manualentry(form)>    [scrollEvents]="true" -->
       <ion-item>
-        <ion-label>Name:<ion-text color='danger'>* </ion-text></ion-label>
-        <ion-input required type="text" placeholder="Enter Vendor Name"></ion-input>
+        <ion-searchbar animated>Name:<ion-text color='danger'>*   </ion-text></ion-searchbar>
+        <ion-input required type="text" placeholder="Enter Vendor Name" [(ngModel)]='storeName'></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label>Address:<ion-text color='danger'>* </ion-text></ion-label>
-        <ion-input type="text" placeholder="Enter Address"></ion-input>
+        <ion-searchbar animated>Address:<ion-text color='danger'>* </ion-text></ion-searchbar>
+        <ion-input type="text" placeholder="Enter Address" [(ngModel)]='location'></ion-input>
       </ion-item>
       <ion-item>
         <ion-label>Date:<ion-text color='danger'>* </ion-text></ion-label>
-        <ion-datetime slot="end" placeholder="Select Date"></ion-datetime>
+        <ion-datetime slot="end" max="2099-12-31" min="2000-01-01" placeholder="  Select Date" [(ngModel)]="date"></ion-datetime>
       </ion-item>
       
-      <ion-item-sliding *ngFor="let entry of items, let entry = index">
+      <ion-item-sliding *ngFor="let entry of items">
         <ion-item>
-          <ion-label>Item: </ion-label>
-          <ion-input type="text" placeholder="Enter Item"></ion-input>
-          <ion-label>Price: </ion-label>
-          <ion-input type="decimal" placeholder="$0.00"></ion-input>
-        </ion-item>
+          <p>
+            <ion-label>Item: </ion-label>
+            <ion-input type="text" placeholder="Enter Item">{{entry.name}}</ion-input>
+
+            <ion-label>Price ($): </ion-label>
+            <ion-input type="text" digitOnly placeholder='$0.00'>{{entry.price}}</ion-input>
+            <ion-button color="dark" (click)='toggleHasAmount(entry)'>Toggle Has Amount</ion-button>
+            <div *ngIf='entry.hasAmount'>
+                <ion-label *ngIf='entry.hasAmount'>Amount: </ion-label>
+                <ion-input *ngIf='entry.hasAmount' type="text" placeholder="Enter Amount">{{entry.amount}}</ion-input>
+    
+                <ion-label *ngIf='entry.hasAmount'>Unit: </ion-label>
+                <ion-select *ngIf='entry.hasAmount' [interfaceOptions]="customAlertOptions" placeholder="Please select an option" interface="alert">
+                  <ion-select-option>Each (per)</ion-select-option>
+                  <ion-select-option>Pounds (lbs)</ion-select-option>
+                  <ion-select-option>Grams (g)</ion-select-option>
+                  <ion-select-option>Kilograms (kg)</ion-select-option>
+                </ion-select>
+            </div>
+
+            <ion-label>Tag: </ion-label>
+            <ion-input type="text" placeholder="Enter a tag">{{entry.tag}}</ion-input>
+          <!-- </p> -->
+      </ion-item>
         
         <ion-item-options side="start">
           <ion-button id="entry" color ="danger"(click)="delete(entry)"><ion-icon name="trash"></ion-icon> Delete</ion-button>
@@ -40,8 +59,9 @@
         <ion-button (click)="newItem()">Add New Item</ion-button>
         
         <ion-button (click)="submit()" color="tertiary">Submit</ion-button>
+        <!-- [disabled]='!readyForSubmit()' -->
       </div>
-    </form>
+    <!-- </form> -->
   </ion-list>
 </ion-content>
 

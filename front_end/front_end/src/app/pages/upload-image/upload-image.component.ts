@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { NavController, LoadingController, ToastController } from '@ionic/angular';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
 import { Camera, CameraOptions } from '@ionic-native/camera';
+import { HttpClient } from '@angular/common/http';
+import { DepFlags } from '@angular/compiler/src/core';
 
 @Component({
   selector: 'app-upload-image',
@@ -9,17 +11,51 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
   styleUrls: ['./upload-image.component.scss'],
 })
 export class UploadImageComponent implements OnInit {
-
-  imageURI:any;
+  public imagePath;
+  imageURL:any;
   imageFileName:any;
+  public message: string;
 
+  selectedFile = null;
+
+  preview(files) {
+    if (files.length === 0)
+      return;
+ 
+    var mimeType = files[0].type;
+    if (mimeType.match(/image\/*/) == null) {
+      this.message = "Only images are supported.";
+      return;
+    }
+ 
+    var reader = new FileReader();
+    this.imagePath = files;
+    reader.readAsDataURL(files[0]); 
+    reader.onload = (_event) => { 
+      this.imageURL = reader.result; 
+    }
+  }
+  
 constructor(public navCtrl: NavController,
   //private transfer: FileTransfer,
   //private camera: Camera,
   public loadingCtrl: LoadingController,
-  public toastCtrl: ToastController) {}
+  public toastCtrl: ToastController,
+  private http: HttpClient) {}
 
 
+  onFileSelected(event){
+    this.selectedFile = <File>event.target.files[0];
+  }
+
+  uploadFile(){
+    const fd = new FormData();
+    fd.append('image', this.selectedFile, this.selectedFile.name)
+    this.http.post('',fd)
+     .subscribe(res =>{
+       console.log(res);
+     })
+  }
 
   // getImage() {
   //   const options: CameraOptions = {
@@ -80,5 +116,6 @@ constructor(public navCtrl: NavController,
 
 
 ngOnInit() {}
+
 }
 

@@ -23,6 +23,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { ManualEntryComponent } from './pages/manual-entry/manual-entry.component';
 import { UploadImageComponent } from './pages/upload-image/upload-image.component';
 
+//import { AutoCompleteModule } from 'ionic4-auto-complete';
+
 //import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
 //import { File } from '@ionic-native/file';
 //import { Camera } from '@ionic-native/camera';
@@ -57,6 +59,7 @@ import { UploadImageComponent } from './pages/upload-image/upload-image.componen
     HttpClientModule,
     NgbModule,
     FormsModule,
+    // AutoCompleteModule,
     IonicStorageModule.forRoot()
   ],
   providers: [

@@ -1,6 +1,6 @@
 # SystemItems
 
-A  system item groups common receipt items, by giving them a common name and a categorization tag.
+A system item groups common receipt items, by giving them a common name and a categorization tag.
 
 ```sh
 {

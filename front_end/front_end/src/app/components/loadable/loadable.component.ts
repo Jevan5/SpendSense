@@ -192,7 +192,6 @@ export class LoadableComponent implements OnInit {
           case this.StateEnum.ERRORED:
             color = 'danger';
             duration = 6000;
-            console.log(message);
             break;
         }
 

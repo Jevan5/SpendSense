@@ -20,6 +20,10 @@ import { ReportsComponent } from 'src/app/pages/reports/reports.component';
 import { SearchComponent } from 'src/app/pages/search/search.component';
 
 import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
+import { ManualEntryComponent } from './pages/manual-entry/manual-entry.component';
+import { DropdownSearchComponent } from './components/dropdown-search/dropdown-search.component';
+import { CreateFranchiseComponent } from './pages/create-franchise/create-franchise.component';
+import { CreateLocationComponent } from './pages/create-location/create-location.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +33,11 @@ import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
     NavbarComponent,
     ProfileComponent,
     ReportsComponent,
-    SearchComponent
+    SearchComponent,
+    ManualEntryComponent,
+    DropdownSearchComponent,
+    CreateFranchiseComponent,
+    CreateLocationComponent
   ],
   entryComponents: [],
   imports: [
@@ -42,7 +50,10 @@ import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
       { path: 'login', component: LoginComponent },
       { path: 'profile', component: ProfileComponent },
       { path: 'reports', component: ReportsComponent },
-      { path: 'search', component: SearchComponent }
+      { path: 'search', component: SearchComponent },
+      { path: 'manual-entry', component: ManualEntryComponent },
+      { path: 'create-franchise', component: CreateFranchiseComponent },
+      { path: 'create-location', component: CreateLocationComponent }
     ]),
     HttpClientModule,
     NgbModule,

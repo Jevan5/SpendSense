@@ -25,6 +25,11 @@ const ReceiptItemSchema = new Schema({
 });
 
 ReceiptItemSchema.pre('save', function(next) {
+    // Ensure the field exists, even if it's null
+    if (this.amount == null) {
+        this.amount = null;
+    }
+
     Receipt.findById(this._receiptId).then((receipt) => {
         if (!receipt) {
             throw new Error(logger.valueNotExistMessage(this._receiptId, '_receiptId'));

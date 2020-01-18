@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Manual Entry</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+  <ion-item>
+    <ion-label position='stacked'>Franchise</ion-label>
+    <app-dropdown-search [items]='franchises' [displayFunction]='franchiseDisplayFunction' (selectsItem)='selectsFranchise($event)' (unselectsItem)='unselectsFranchise($event)'></app-dropdown-search>
+  </ion-item>
+  <ion-button *ngIf='model.franchise == null' (click)='router.navigate(["/create-franchise"])'>Can't find a Franchise?</ion-button>
+  <ion-item *ngIf='model.franchise != null'>
+    <ion-label position='stacked'>Location</ion-label>
+    <app-dropdown-search [items]='locationsOfFranchise' [displayFunction]='locationDisplayFunction' (selectsItem)='selectsLocation($event)' (unselectsItem)='unselectsLocation($event)'></app-dropdown-search>
+  </ion-item>
+  <ion-button *ngIf='model.franchise != null && model.location == null' (click)='router.navigate(["/create-location"])'>Can't find a Location?</ion-button>
+  <ion-list>
+    <div *ngFor='let receiptItem of model.receiptItems; let i = index' [attr.data-index]='i'>
+      <ion-item>
+        <ion-label position='stacked'>Name on Receipt</ion-label>
+        <ion-input type='text' [(ngModel)]='receiptItem.nameOnReceipt' (ionBlur)='nameOnReceiptLeft($event, i)'></ion-input>
+      </ion-item>
+      <ion-item *ngIf='receiptItem.nameOnReceiptEntered'>
+        <ion-label position='stacked'>Common Name</ion-label>
+        <app-dropdown-search [(ngModel)]='receiptItem.commonName' [startingItem]='receiptItem.commonName' [items]='systemItemNames' [displayFunction]='systemItemNameDisplayFunction'></app-dropdown-search>
+      </ion-item>
+      <ion-item *ngIf='receiptItem.nameOnReceiptEntered'>
+        <ion-label position='stacked'>Tag</ion-label>
+        <app-dropdown-search [(ngModel)]='receiptItem.tag' [startingItem]='receiptItem.tag' [items]='tags' [displayFunction]='tagDisplayFunction'></app-dropdown-search>
+      </ion-item>
+      <ion-item>
+        <ion-label position='stacked'>Price</ion-label>
+        <ion-input type='number' [(ngModel)]='receiptItem.price'></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position='stacked'>Has Amount</ion-label>
+        <ion-checkbox [(ngModel)]='receiptItem.hasAmount'></ion-checkbox>
+      </ion-item>
+      <ion-item *ngIf='receiptItem.hasAmount'>
+        <ion-label position='stacked'>Amount Unit</ion-label>
+        <ion-select [(ngModel)]='receiptItem.amountUnit' [value]='receiptItem.amountUnit'>
+          <ion-select-option [value]='amountUnits.MG'>{{amountUnits.MG}}</ion-select-option>
+          <ion-select-option [value]='amountUnits.G'>{{amountUnits.G}}</ion-select-option>
+          <ion-select-option [value]='amountUnits.KG'>{{amountUnits.KG}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf='receiptItem.hasAmount'>
+        <ion-label position='stacked'>Amount</ion-label>
+        <ion-input type='number' [(ngModel)]='receiptItem.amount'></ion-input>
+      </ion-item>
+      <ion-button color='danger' (click)='removeReceiptItem(i)'>Remove</ion-button>
+    </div>
+  </ion-list>
+  <ion-button (click)='addReceiptItem()'>Add Receipt Item</ion-button>
+  <ion-button [disabled]='!readyToSubmit()' (click)='submit()'>Submit</ion-button>
+</ion-content>

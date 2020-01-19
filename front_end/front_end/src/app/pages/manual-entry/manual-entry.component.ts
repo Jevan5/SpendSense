@@ -56,6 +56,12 @@ export class ManualEntryComponent extends LoadableComponent implements OnInit {
     });
   }
 
+  // getfranchises(event){
+  //   for(var i = 0; i > this.franchises.length(), i++){
+
+  //   }
+  // }
+
   ngOnInit() {}
 
   private newItem(): void{

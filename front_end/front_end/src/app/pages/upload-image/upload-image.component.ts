@@ -5,18 +5,28 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
 import { HttpClient } from '@angular/common/http';
 import { DepFlags } from '@angular/compiler/src/core';
 
+import { environment } from '../../../environments/environment';
+
 @Component({
   selector: 'app-upload-image',
   templateUrl: './upload-image.component.html',
   styleUrls: ['./upload-image.component.scss'],
 })
 export class UploadImageComponent implements OnInit {
+  camera: any;
+  imageURI: any;
+  transfer: any;
+  //loadingCtrl: any;
+  //imageFileName: string;
+  //toastCtrl: any;
+
+//   Second attempt - good THIS STUFF WORKS 
   public imagePath;
   imageURL:any;
   imageFileName:any;
   public message: string;
 
-  selectedFile = null;
+  selectedFile:any;
 
   preview(files) {
     if (files.length === 0)
@@ -45,18 +55,22 @@ constructor(public navCtrl: NavController,
 
 
   onFileSelected(event){
-    this.selectedFile = <File>event.target.files[0];
+    // this.selectedFile = <File>event.target.files[0];
+    this.selectedFile = event.target.files[0];
   }
 
-  uploadFile(){
-    const fd = new FormData();
-    fd.append('image', this.selectedFile, this.selectedFile.name)
-    this.http.post('',fd)
+  uploadFile(imageFileName){
+    let fd = new FormData();
+    fd.append('image', this.selectedFile)
+    this.http.post('http://' + environment.backEndIp + ':' + environment.backEndPort + '/scanReceipt',fd)
      .subscribe(res =>{
        console.log(res);
      })
   }
 
+
+
+  //First attempt
   // getImage() {
   //   const options: CameraOptions = {
   //     quality: 100,
@@ -115,7 +129,10 @@ constructor(public navCtrl: NavController,
   // }
 
 
-ngOnInit() {}
+  ngOnInit() {}
 
-}
+  }
+
+
+
 

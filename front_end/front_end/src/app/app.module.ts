@@ -6,6 +6,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { Storage, IonicStorageModule } from '@ionic/storage';
 
+
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -26,8 +27,9 @@ import { UploadImageComponent } from './pages/upload-image/upload-image.componen
 //import { AutoCompleteModule } from 'ionic4-auto-complete';
 
 //import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
-//import { File } from '@ionic-native/file';
-//import { Camera } from '@ionic-native/camera';
+import { File } from '@ionic-native/File/ngx';
+import { Camera } from '@ionic-native/Camera/ngx';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
 
 @NgModule({
   declarations: [
@@ -70,8 +72,9 @@ import { UploadImageComponent } from './pages/upload-image/upload-image.componen
     //FileTransfer,
     //FileUploadOptions,
     //FileTransferObject,
-    //File,
-    //Camera
+    File,
+    Camera,
+    WebView
   ],
   bootstrap: [AppComponent]
 })

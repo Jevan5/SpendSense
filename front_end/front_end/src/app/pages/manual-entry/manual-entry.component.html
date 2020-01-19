@@ -10,19 +10,23 @@
 <ion-content > 
   <ion-list>
     <!-- <form lines = 'full' (ngSubmit)=manualentry(form)>    [scrollEvents]="true" -->
+      <!-- Receipt -->
       <ion-item>
-        <ion-searchbar animated>Name:<ion-text color='danger'>*   </ion-text></ion-searchbar>
-        <ion-input required type="text" placeholder="Enter Vendor Name" [(ngModel)]='storeName'></ion-input>
+        <ion-searchbar animated type="text" (ionChange)="getfranchises($event)">Name:<ion-text color='danger'>*   </ion-text></ion-searchbar>
+        <!-- <ion-input required type="text" placeholder="Enter Vendor Name" [(ngModel)]='storeName'></ion-input> -->
       </ion-item>
+
       <ion-item>
         <ion-searchbar animated>Address:<ion-text color='danger'>* </ion-text></ion-searchbar>
         <ion-input type="text" placeholder="Enter Address" [(ngModel)]='location'></ion-input>
       </ion-item>
+
       <ion-item>
         <ion-label>Date:<ion-text color='danger'>* </ion-text></ion-label>
         <ion-datetime slot="end" max="2099-12-31" min="2000-01-01" placeholder="  Select Date" [(ngModel)]="date"></ion-datetime>
       </ion-item>
       
+      <!-- ReceiptItems -->
       <ion-item-sliding *ngFor="let entry of items">
         <ion-item>
           <p>
@@ -32,6 +36,7 @@
             <ion-label>Price ($): </ion-label>
             <ion-input type="text" digitOnly placeholder='$0.00'>{{entry.price}}</ion-input>
             <ion-button color="dark" (click)='toggleHasAmount(entry)'>Toggle Has Amount</ion-button>
+          </p>
             <div *ngIf='entry.hasAmount'>
                 <ion-label *ngIf='entry.hasAmount'>Amount: </ion-label>
                 <ion-input *ngIf='entry.hasAmount' type="text" placeholder="Enter Amount">{{entry.amount}}</ion-input>
@@ -44,10 +49,10 @@
                   <ion-select-option>Kilograms (kg)</ion-select-option>
                 </ion-select>
             </div>
-
+          <p>
             <ion-label>Tag: </ion-label>
             <ion-input type="text" placeholder="Enter a tag">{{entry.tag}}</ion-input>
-          <!-- </p> -->
+          </p>
       </ion-item>
         
         <ion-item-options side="start">

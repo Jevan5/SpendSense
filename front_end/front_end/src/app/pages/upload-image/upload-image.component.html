@@ -8,19 +8,21 @@
 </ion-header>
 
 
+<!-- Second Attempt - good  -->
 <ion-content padding>
-    <ion-item>
+    <!-- <ion-item>
       <p>{{imageURI}}</p>
       <ion-icon name="camera"></ion-icon>
       <ion-input type="file" accept="image/*" (change)="preview(file.files)"></ion-input>
-      <!--<ion-button color="secondary" (click)="getImage()">Get Image</ion-button>onFileSelected($event)-->
-    </ion-item>
+      <ion-button color="secondary" onFileSelected($event) (click)="getImage()">Get Image</ion-button>
+    </ion-item> -->
 
     <ion-item>
       <span style="color:red;" *ngIf="message">{{message}}</span>
       <input #file type="file" accept='image/*' (change)="preview(file.files)" />
       <img [src]="imageURL" height="200" *ngIf="imageURL">
     </ion-item>
+
 
     <ion-item>
       <h4>Image Preview</h4>
@@ -33,16 +35,13 @@
     </ion-item>
 </ion-content>
 
-
-
-
-
   
-  <!--<ion-content class="ion-padding">
+  <!--First attempt, probably deleted -->
+    <!-- <ion-content class="ion-padding">
     <img src="{{pathForImage(lastImage)}}" style="width: 100%" [hidden]="lastImage === null">
-    <h3 [hidden]="lastImage !== null">Please Select Image!</h3> -->
+    <h3 [hidden]="lastImage !== null">Please Select Image!</h3> 
 
-    <!--<ion-toolbar>
+    <ion-toolbar>
       <ion-buttons>
         <button ion-button icon-left (click)="presentActionSheet()">
           <ion-icon name="camera"></ion-icon>Select Image
@@ -52,7 +51,8 @@
         </button>
       </ion-buttons>
     </ion-toolbar>
-  </ion-content>
+  </ion-content> -->
 
-</ion-footer>-->
+
+
 

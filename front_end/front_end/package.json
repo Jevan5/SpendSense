@@ -26,10 +26,12 @@
     "@ionic/angular": "^4.7.1",
     "@ionic/storage": "^2.2.0",
     "@ng-bootstrap/ng-bootstrap": "^5.1.2",
+    "@types/string-similarity": "^3.0.0",
     "bootstrap": "^4.3.1",
     "chart.js": "^2.9.2",
     "core-js": "^2.5.4",
     "rxjs": "~6.5.1",
+    "string-similarity": "^4.0.1",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"
   },

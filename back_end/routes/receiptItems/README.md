@@ -24,7 +24,7 @@ A receipt item is an item on a receipt.
 
 `price` Price that appears on the receipt for this receipt item.
 
-`amount` Amount in kilograms that appears on the receipt for this receipt item.
+`amount` Amount in kilograms that appears on the receipt for this receipt item. Nullable.
 
 `__v` Version number of the receipt item. Non-modifiable.
 
@@ -59,7 +59,7 @@ url: http://127.0.0.1:8080/receiptItems
             "systemItemId": "5db62f14daeeec4704e6ba1e",
             "name": "apple",
             "price": 1.2,
-            "amount": 4
+            "amount": null
         }
     ]
 }
@@ -142,7 +142,7 @@ body: {
         "_systemItemId": "6ab62f14daeeec4704e6ba1a",
         "name": "watermelon",
         "price": 13,
-        "amount": 2
+        "amount": null
     }
 }
 ```
@@ -157,7 +157,7 @@ body: {
         "_systemItemId": "6ab62f14daeeec4704e6ba1a",
         "name": "watermelon",
         "price": 13,
-        "amount": 2,
+        "amount": null,
         "__v": 1
     }
 }

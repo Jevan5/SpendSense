@@ -2,25 +2,22 @@ const mongoose  = require('mongoose');
 const Schema    = mongoose.Schema;
 const logger    = require('../../tools/logger');
 
-const SystemItemSchema = new Schema({
+const CommonTagSchema = new Schema({
     tag: {
         type: String,
-        required: [true, logger.isRequiredMessage()],
-        unique: false
+        required: [true, logger.isRequiredMessage()]
     }, name: {
         type: String,
         required: [true, logger.isRequiredMessage()],
-        unique: false
+        unique: true
     }
 });
 
-SystemItemSchema.index({ name: 1, tag: 1 }, { unique: true });
-
-SystemItemSchema.pre('save', function(next) {
+CommonTagSchema.pre('save', function(next) {
     this.tag = this.tag.toLowerCase();
     this.name = this.name.toLowerCase();
 
     next();
 });
 
-module.exports = mongoose.model('SystemItem', SystemItemSchema);
+module.exports = mongoose.model('CommonTag', CommonTagSchema);

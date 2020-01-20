@@ -100,6 +100,29 @@ export class ModelService {
   }
 
   /**
+   * 
+   * @param models Models to save.
+   * @returns {Promise<Array<Model>>} Promise which resolves with the saved models.
+   */
+  public saveMany(models: Array<Model>): Promise<Array<Model>> {
+    return this.saveManyRec(models, new Array<Model>(), 0);
+  }
+
+  public saveManyRec(models: Array<Model>, savedModels: Array<Model>, index: number): Promise<Array<Model>> {
+    if (index === models.length) {
+      return new Promise<Array<Model>>((resolve, reject) => {
+        resolve(savedModels);
+      });
+    }
+
+    return this.save(models[index]).then((model) => {
+      savedModels.push(model);
+
+      return this.saveManyRec(models, savedModels, index + 1);
+    });
+  }
+
+  /**
    * Deletes a single model.
    * @param id ID of the model to delete.
    * @param modelClass Class of the model.

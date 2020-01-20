@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Create a Location</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+  <ion-item>
+    <ion-label position='stacked'>Franchise</ion-label>
+    <app-dropdown-search [items]='franchises' [displayFunction]='franchiseDisplayFunction' (selectsItem)='selectsFranchise($event)' (unselectsItem)='unselectsFranchise($event)'></app-dropdown-search>
+  </ion-item>
+  <ion-item>
+    <ion-label position='stacked'>Address</ion-label>
+    <ion-input type='text' [(ngModel)]='model.address'></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position='stacked'>City</ion-label>
+    <ion-input type='text' [(ngModel)]='model.city'></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position='stacked'>Country</ion-label>
+    <ion-input type='text' [(ngModel)]='model.country'></ion-input>
+  </ion-item>
+  <ion-button [disabled]='franchise == null' (click)='submit()'>Create</ion-button>
+</ion-content>

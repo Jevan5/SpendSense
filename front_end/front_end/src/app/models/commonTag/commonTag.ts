@@ -1,17 +1,17 @@
 import { Model } from 'src/app/models/model/model';
 
-export class ReceiptItem extends Model {
-    public readonly class = ReceiptItem;
+export class CommonTag extends Model {
+    public readonly class = CommonTag;
 
     constructor() {
         super();
     }
 
     public static getModelName(): string {
-        return 'receiptItem';
+        return 'commonTag';
     }
 
     public static getFields(): Array<string> {
-        return ['_id', '__v', '_receiptId', '_systemItemId', 'name', 'price', 'amount'];
+        return ['_id', 'name', 'tag', '__v'];
     }
 }

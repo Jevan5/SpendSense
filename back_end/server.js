@@ -1,11 +1,10 @@
-const express       = require('express');
-const mongoose      = require('mongoose');
-const app           = express();
-const bodyParser    = require('body-parser');
-const router        = express.Router();
-const environment   = require('./environment');
-const cryptoHelper 	= require('./tools/cryptoHelper');
-const updateLocationItems	= require('./jobs/updateLocationItems');
+const express       		= require('express');
+const mongoose      		= require('mongoose');
+const app           		= express();
+const bodyParser    		= require('body-parser');
+const environment   		= require('./environment');
+const UpdateLocationItems	= require('./jobs/updateLocationItems');
+const UpdateCommonTags		= require('./jobs/updateCommonTags');
 
 if (environment.db != 'test') {
 	mongoose.connect('mongodb://localhost:27017/' + environment.db, {
@@ -28,6 +27,7 @@ app.use((req, res, next) => {
 // Register the routes
 
 const authenticate	= require('./routes/authenticate/authenticate');
+const commonTags    = require('./routes/commonTags/commonTags');
 const favItems		= require('./routes/favItems/favItems');
 const favLocations	= require('./routes/favLocations/favLocations');
 const franchises	= require('./routes/franchises/franchises');
@@ -39,6 +39,7 @@ const systemItems	= require('./routes/systemItems/systemItems');
 const users 		= require('./routes/users/users');
 
 app.use('/authenticate', authenticate);
+app.use('/commonTags', commonTags);
 app.use('/favItems', favItems);
 app.use('/favLocations', favLocations);
 app.use('/franchises', franchises);
@@ -49,9 +50,10 @@ app.use('/receipts', receipts);
 app.use('/systemItems', systemItems);
 app.use('/users', users);
 
-// Update location items once per day
+// Run jobs
 if (environment.db != 'test') {
-	updateLocationItems.startJob(1000 * 60 * 60 * 24);
+	UpdateLocationItems.startJob(1000 * 60 * 60 * 24);
+	UpdateCommonTags.startJob(1000 * 60 * 60 * 24);
 }
 
 app.listen(environment.port);

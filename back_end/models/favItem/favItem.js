@@ -1,11 +1,11 @@
 const mongoose          = require ('mongoose');
 const Schema            = mongoose.Schema;
-const User              = require('./user');
-const Receipt           = require('./receipt');
-const ReceiptItem       = require('./receiptItem');
-const SystemItem        = require('./systemItem');
-const logger            = require('../tools/logger');
-const authorizer        = require('../tools/authorizer');
+const User              = require('../user/user');
+const Receipt           = require('../receipt/receipt');
+const ReceiptItem       = require('../receiptItem/receiptItem');
+const SystemItem        = require('../systemItem/systemItem');
+const logger            = require('../../tools/logger');
+const authorizer        = require('../../tools/authorizer');
 const uniqueValidator   = require('mongoose-unique-validator');
 
 const FavItemSchema = new Schema({
@@ -64,5 +64,7 @@ FavItemSchema.pre('save', function(next) {
         next(err);
     });
 });
+
+FavItemSchema.plugin(uniqueValidator, { message: logger.alreadyExistsMessage() });
 
 module.exports = mongoose.model('FavItem', FavItemSchema);

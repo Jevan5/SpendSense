@@ -1,10 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { Storage } from '@ionic/storage';
 
 import { AuthenticationService } from './authentication.service';
 import { User } from 'src/app/models/user/user';
 import { TestVariables } from 'src/app/testing/test-variables';
+import { MockHttpClient } from 'src/app/testing/mock-http-client';
 
 describe('AuthenticationService', () => {
   let authenticationService: AuthenticationService;
@@ -18,6 +19,10 @@ describe('AuthenticationService', () => {
       {
         provide: Storage,
         useValue: new Storage({})
+      },
+      {
+        provide: HttpClient,
+        useValue: new MockHttpClient()
       }
     ]
   }));

@@ -1,4 +1,9 @@
 node_modules
 secrets.json
+<<<<<<< HEAD
 */logs*
 package-lock.json
+=======
+package-lock.json
+*/logs/scans/*
+>>>>>>> develop

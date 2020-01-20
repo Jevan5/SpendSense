@@ -14,8 +14,8 @@ export class TestVariables {
         var user = new User();
         user.setValues({
             __v: 0,
-            username: 'someusername',
-            password: 'somepassword',
+            username: this.username,
+            password: this.password,
             email: 'someEmail@server.endpoint',
             firstName: 'theirFirstName',
             lastName: 'theirLastName',

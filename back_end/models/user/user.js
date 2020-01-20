@@ -1,7 +1,7 @@
 const mongoose          = require('mongoose');
 const Schema            = mongoose.Schema;
 const uniqueValidator   = require('mongoose-unique-validator');
-const logger            = require('../tools/logger');
+const logger            = require('../../tools/logger');
 
 const UserSchema = new Schema({
     email: {
@@ -34,6 +34,8 @@ const UserSchema = new Schema({
     }, authentication: {
         type: String
     }
+}, {
+    strict: true
 });
 
 UserSchema.pre('save', function(next) {

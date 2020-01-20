@@ -1,6 +1,6 @@
 const express           = require('express');
 const router            = express.Router();
-const User              = require('../../models/user');
+const User              = require('../../models/user/user');
 const cryptoHelper      = require('../../tools/cryptoHelper');
 const nodemailerHelper  = require('../../tools/nodemailerHelper');
 const environment       = require('../../environment');

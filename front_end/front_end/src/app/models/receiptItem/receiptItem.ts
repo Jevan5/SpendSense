@@ -12,6 +12,6 @@ export class ReceiptItem extends Model {
     }
 
     public static getFields(): Array<string> {
-        return ['_id', '__v', '_receiptId', '_systemItemId', 'name', 'price', 'quantity'];
+        return ['_id', '__v', '_receiptId', '_systemItemId', 'name', 'price', 'amount'];
     }
 }

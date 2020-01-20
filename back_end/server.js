@@ -1,13 +1,18 @@
-const express       = require('express');
-const mongoose      = require('mongoose');
-const app           = express();
-const bodyParser    = require('body-parser');
-const router        = express.Router();
-const environment   = require('./environment');
-const cryptoHelper 	= require('./tools/cryptoHelper');
-const updateLocationItems	= require('./jobs/updateLocationItems');
+const express       		= require('express');
+const mongoose      		= require('mongoose');
+const app           		= express();
+const bodyParser    		= require('body-parser');
+const environment   		= require('./environment');
+const UpdateLocationItems	= require('./jobs/updateLocationItems');
+const UpdateCommonTags		= require('./jobs/updateCommonTags');
 
-// handles files in body of POST requests
+if (environment.db != 'test') {
+	mongoose.connect('mongodb://localhost:27017/' + environment.db, {
+		useNewUrlParser: true,
+		useUnifiedTopology: true
+	});
+}
+
 var busboy = require('connect-busboy');
 app.use(busboy());
 
@@ -31,6 +36,7 @@ app.use((req, res, next) => {
 // Register the routes
 
 const authenticate	= require('./routes/authenticate/authenticate');
+const commonTags    = require('./routes/commonTags/commonTags');
 const favItems		= require('./routes/favItems/favItems');
 const favLocations	= require('./routes/favLocations/favLocations');
 const franchises	= require('./routes/franchises/franchises');
@@ -43,6 +49,7 @@ const users 		= require('./routes/users/users');
 const scanRecept 	= require('./routes/scanReceipt/scanReceipt');
 
 app.use('/authenticate', authenticate);
+app.use('/commonTags', commonTags);
 app.use('/favItems', favItems);
 app.use('/favLocations', favLocations);
 app.use('/franchises', franchises);
@@ -54,8 +61,11 @@ app.use('/systemItems', systemItems);
 app.use('/users', users);
 app.use('/scanReceipt', scanRecept);
 
-// Update location items once per day
-updateLocationItems.startJob(1000 * 60 * 60 * 24);
+// Run jobs
+if (environment.db != 'test') {
+	UpdateLocationItems.startJob(1000 * 60 * 60 * 24);
+	UpdateCommonTags.startJob(1000 * 60 * 60 * 24);
+}
 
 app.listen(environment.port);
 console.log('Listening on ' + environment.port);

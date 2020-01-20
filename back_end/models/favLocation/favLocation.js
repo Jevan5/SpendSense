@@ -1,8 +1,8 @@
 const mongoose  = require('mongoose');
 const Schema    = mongoose.Schema;
-const Location  = require('./location');
-const User      = require('./user');
-const logger    = require('../tools/logger');
+const Location  = require('../location/location');
+const User      = require('../user/user');
+const logger    = require('../../tools/logger');
 
 const FavLocationSchema = new Schema({
     _userId: {

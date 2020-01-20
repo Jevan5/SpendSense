@@ -1,13 +1,7 @@
 const chai          = require('chai');
-const chaiHttp      = require('chai-http');
-const mongoose      = require('mongoose');
 const app           = require('../../server');
-const environment   = require('../../environment');
-const User          = require('../../models/user');
+const User          = require('../../models/user/user');
 const cryptoHelper  = require('../../tools/cryptoHelper');
-
-chai.use(chaiHttp);
-chai.should();
 
 var password1 = 'WesternUniversity';
 var salt1 = 'some salt';
@@ -69,7 +63,7 @@ beforeEach((done) => {
 });
 
 describe("GET /", () => {
-    it("should fail with no 'Authorization' header", (done) => {
+    it("should reject with no 'Authorization' header", (done) => {
         chai.request(app)
         .get('/users')
         .end((err, res) => {
@@ -77,7 +71,7 @@ describe("GET /", () => {
             done();
         });
     });
-    it("should fail with non-existant username in 'Authorization' header", (done) => {
+    it("should reject with non-existant username in 'Authorization' header", (done) => {
         chai.request(app)
         .get('/users')
         .set('Authorization', 'invalid username,password')
@@ -86,7 +80,7 @@ describe("GET /", () => {
             done();
         });
     });
-    it("should fail with existing username in 'Authorization' header, but wrong password", (done) => {
+    it("should reject with existing username in 'Authorization' header, but wrong password", (done) => {
         chai.request(app)
         .get('/users')
         .set('Authorization', user.username + ',wrongPassword')
@@ -95,7 +89,7 @@ describe("GET /", () => {
             done();
         });
     });
-    it("should fail with correct username and password in 'Authorization' header for non-authenticated user", (done) => {
+    it("should reject with correct username and password in 'Authorization' header for non-authenticated user", (done) => {
         new User(nonAuthenticatedUserExample).save().then(() => {
             chai.request(app)
             .get('/users')
@@ -119,7 +113,7 @@ describe("GET /", () => {
 });
 
 describe("PUT /", () => {
-    it("should fail with non-existent username", (done) => {
+    it("should reject with non-existent username", (done) => {
         chai.request(app)
         .put('/users')
         .send({ user: userToPost })
@@ -128,7 +122,7 @@ describe("PUT /", () => {
             done();
         });
     });
-    it("should fail with non-authenticated user", (done) => {
+    it("should reject with non-authenticated user", (done) => {
         new User(nonAuthenticatedUserExample).save().then(() => {
             chai.request(app)
             .put('/users')
@@ -139,7 +133,7 @@ describe("PUT /", () => {
             });
         });
     });
-    it("should fail if password is less than " + cryptoHelper.getMinPasswordLength() + " characters", (done) => {
+    it("should reject if password is less than " + cryptoHelper.getMinPasswordLength() + " characters", (done) => {
         user.changingPassword = cryptoHelper.generateRandomString(cryptoHelper.getMinPasswordLength() - 1);
         chai.request(app)
         .put('/users')
@@ -195,7 +189,7 @@ describe("PUT /", () => {
 });
 
 describe("POST /", () => {
-    it("should fail with no first name", (done) => {
+    it("should reject with no first name", (done) => {
         userToPost.firstName = null;
         chai.request(app)
         .post('/users')
@@ -205,7 +199,7 @@ describe("POST /", () => {
             done();
         })
     });
-    it("should fail with no last name", (done) => {
+    it("should reject with no last name", (done) => {
         userToPost.lastName = null;
         chai.request(app)
         .post('/users')
@@ -215,7 +209,7 @@ describe("POST /", () => {
             done();
         });
     });
-    it("should fail with invalid email", (done) => {
+    it("should reject with invalid email", (done) => {
         userToPost.email = 'invalid email';
         chai.request(app)
         .post('/users')
@@ -225,7 +219,7 @@ describe("POST /", () => {
             done();
         });
     });
-    it("should fail with non-unique email", (done) => {
+    it("should reject with non-unique email", (done) => {
         userToPost.email = user.email;
         chai.request(app)
         .post('/users')
@@ -235,7 +229,7 @@ describe("POST /", () => {
             done();
         });
     });
-    it("should fail with no username", (done) => {
+    it("should reject with no username", (done) => {
         userToPost.username = null;
         chai.request(app)
         .post('/users')
@@ -245,7 +239,7 @@ describe("POST /", () => {
             done();
         });
     });
-    it("should fail with non-unique username", (done) => {
+    it("should reject with non-unique username", (done) => {
         userToPost.username = user.username;
         chai.request(app)
         .post('/users')
@@ -255,7 +249,7 @@ describe("POST /", () => {
             done();
         });
     });
-    it("should fail without password of length " + cryptoHelper.getMinPasswordLength() + " or more", (done) => {
+    it("should reject without password of length " + cryptoHelper.getMinPasswordLength() + " or more", (done) => {
         userToPost.password = cryptoHelper.generateRandomString(cryptoHelper.getMinPasswordLength() - 1);
         chai.request(app)
         .post('/users')
@@ -297,7 +291,7 @@ describe("POST /", () => {
 });
 
 describe("PUT /:_id", () => {
-    it("should fail with no 'Authorization' header", (done) => {
+    it("should reject with no 'Authorization' header", (done) => {
         chai.request(app)
         .put('/users/' + user._id)
         .end((err, res) => {
@@ -305,7 +299,7 @@ describe("PUT /:_id", () => {
             done();
         });
     });
-    it("should fail with non-existant username in 'Authorization' header", (done) => {
+    it("should reject with non-existant username in 'Authorization' header", (done) => {
         chai.request(app)
         .put('/users/' + user._id)
         .set('Authorization', 'invalid username,password')
@@ -314,7 +308,7 @@ describe("PUT /:_id", () => {
             done();
         });
     });
-    it("should fail with existing username in 'Authorization' header, but wrong password", (done) => {
+    it("should reject with existing username in 'Authorization' header, but wrong password", (done) => {
         chai.request(app)
         .put('/users/' + user._id)
         .set('Authorization', user.username + ',wrongPassword')
@@ -323,7 +317,7 @@ describe("PUT /:_id", () => {
             done();
         });
     });
-    it("should fail with correct username and password in 'Authorization' header for non-authenticated user", (done) => {
+    it("should reject with correct username and password in 'Authorization' header for non-authenticated user", (done) => {
         new User(nonAuthenticatedUserExample).save().then((u) => {
             chai.request(app)
             .put('/users/' + u._id)
@@ -334,7 +328,7 @@ describe("PUT /:_id", () => {
             });
         });
     });
-    it("should fail with correct username and password in 'Authorization' header, if the _id does not match the authorized user", (done) => {
+    it("should reject with correct username and password in 'Authorization' header, if the _id does not match the authorized user", (done) => {
         new User(nonAuthenticatedUserExample).save().then((u) => {
             chai.request(app)
             .put('/users/' + u._id)

@@ -1,74 +1,60 @@
 <ion-header>
-    <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
-      </ion-buttons>
-    <ion-title>Manual Receipt Entry</ion-title>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Manual Entry</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content > 
+<ion-content fullscreen>
+  <ion-item>
+    <ion-label position='stacked'>Franchise</ion-label>
+    <app-dropdown-search [items]='franchises' [displayFunction]='franchiseDisplayFunction' (selectsItem)='selectsFranchise($event)' (unselectsItem)='unselectsFranchise($event)'></app-dropdown-search>
+  </ion-item>
+  <ion-button *ngIf='model.franchise == null' (click)='router.navigate(["/create-franchise"])'>Can't find a Franchise?</ion-button>
+  <ion-item *ngIf='model.franchise != null'>
+    <ion-label position='stacked'>Location</ion-label>
+    <app-dropdown-search [items]='locationsOfFranchise' [displayFunction]='locationDisplayFunction' (selectsItem)='selectsLocation($event)' (unselectsItem)='unselectsLocation($event)'></app-dropdown-search>
+  </ion-item>
+  <ion-button *ngIf='model.franchise != null && model.location == null' (click)='router.navigate(["/create-location"])'>Can't find a Location?</ion-button>
   <ion-list>
-    <!-- <form lines = 'full' (ngSubmit)=manualentry(form)>    [scrollEvents]="true" -->
-      <!-- Receipt -->
+    <div *ngFor='let receiptItem of model.receiptItems; let i = index' [attr.data-index]='i'>
       <ion-item>
-        <ion-searchbar animated type="text" (ionChange)="getfranchises($event)">Name:<ion-text color='danger'>*   </ion-text></ion-searchbar>
-        <!-- <ion-input required type="text" placeholder="Enter Vendor Name" [(ngModel)]='storeName'></ion-input> -->
+        <ion-label position='stacked'>Name on Receipt</ion-label>
+        <ion-input type='text' [(ngModel)]='receiptItem.nameOnReceipt' (ionBlur)='nameOnReceiptLeft($event, i)'></ion-input>
       </ion-item>
-
+      <ion-item *ngIf='receiptItem.nameOnReceiptEntered'>
+        <ion-label position='stacked'>Common Name</ion-label>
+        <app-dropdown-search [(ngModel)]='receiptItem.commonName' [startingItem]='receiptItem.commonName' [items]='systemItemNames' [displayFunction]='systemItemNameDisplayFunction'></app-dropdown-search>
+      </ion-item>
+      <ion-item *ngIf='receiptItem.nameOnReceiptEntered'>
+        <ion-label position='stacked'>Tag</ion-label>
+        <app-dropdown-search [(ngModel)]='receiptItem.tag' [startingItem]='receiptItem.tag' [items]='tags' [displayFunction]='tagDisplayFunction'></app-dropdown-search>
+      </ion-item>
       <ion-item>
-        <ion-searchbar animated>Address:<ion-text color='danger'>* </ion-text></ion-searchbar>
-        <ion-input type="text" placeholder="Enter Address" [(ngModel)]='location'></ion-input>
+        <ion-label position='stacked'>Price</ion-label>
+        <ion-input type='number' [(ngModel)]='receiptItem.price'></ion-input>
       </ion-item>
-
       <ion-item>
-        <ion-label>Date:<ion-text color='danger'>* </ion-text></ion-label>
-        <ion-datetime slot="end" max="2099-12-31" min="2000-01-01" placeholder="  Select Date" [(ngModel)]="date"></ion-datetime>
+        <ion-label position='stacked'>Has Amount</ion-label>
+        <ion-checkbox [(ngModel)]='receiptItem.hasAmount'></ion-checkbox>
       </ion-item>
-      
-      <!-- ReceiptItems -->
-      <ion-item-sliding *ngFor="let entry of items">
-        <ion-item>
-          <p>
-            <ion-label>Item: </ion-label>
-            <ion-input type="text" placeholder="Enter Item">{{entry.name}}</ion-input>
-
-            <ion-label>Price ($): </ion-label>
-            <ion-input type="text" digitOnly placeholder='$0.00'>{{entry.price}}</ion-input>
-            <ion-button color="dark" (click)='toggleHasAmount(entry)'>Toggle Has Amount</ion-button>
-          </p>
-            <div *ngIf='entry.hasAmount'>
-                <ion-label *ngIf='entry.hasAmount'>Amount: </ion-label>
-                <ion-input *ngIf='entry.hasAmount' type="text" placeholder="Enter Amount">{{entry.amount}}</ion-input>
-    
-                <ion-label *ngIf='entry.hasAmount'>Unit: </ion-label>
-                <ion-select *ngIf='entry.hasAmount' [interfaceOptions]="customAlertOptions" placeholder="Please select an option" interface="alert">
-                  <ion-select-option>Each (per)</ion-select-option>
-                  <ion-select-option>Pounds (lbs)</ion-select-option>
-                  <ion-select-option>Grams (g)</ion-select-option>
-                  <ion-select-option>Kilograms (kg)</ion-select-option>
-                </ion-select>
-            </div>
-          <p>
-            <ion-label>Tag: </ion-label>
-            <ion-input type="text" placeholder="Enter a tag">{{entry.tag}}</ion-input>
-          </p>
+      <ion-item *ngIf='receiptItem.hasAmount'>
+        <ion-label position='stacked'>Amount Unit</ion-label>
+        <ion-select [(ngModel)]='receiptItem.amountUnit' [value]='receiptItem.amountUnit'>
+          <ion-select-option [value]='amountUnits.MG'>{{amountUnits.MG}}</ion-select-option>
+          <ion-select-option [value]='amountUnits.G'>{{amountUnits.G}}</ion-select-option>
+          <ion-select-option [value]='amountUnits.KG'>{{amountUnits.KG}}</ion-select-option>
+        </ion-select>
       </ion-item>
-        
-        <ion-item-options side="start">
-          <ion-button id="entry" color ="danger"(click)="delete(entry)"><ion-icon name="trash"></ion-icon> Delete</ion-button>
-        </ion-item-options>
-      </ion-item-sliding>
-
-      <div class='ion-padding'>
-        <ion-button (click)="newItem()">Add New Item</ion-button>
-        
-        <ion-button (click)="submit()" color="tertiary">Submit</ion-button>
-        <!-- [disabled]='!readyForSubmit()' -->
-      </div>
-    <!-- </form> -->
+      <ion-item *ngIf='receiptItem.hasAmount'>
+        <ion-label position='stacked'>Amount</ion-label>
+        <ion-input type='number' [(ngModel)]='receiptItem.amount'></ion-input>
+      </ion-item>
+      <ion-button color='danger' (click)='removeReceiptItem(i)'>Remove</ion-button>
+    </div>
   </ion-list>
+  <ion-button (click)='addReceiptItem()'>Add Receipt Item</ion-button>
+  <ion-button [disabled]='!readyToSubmit()' (click)='submit()'>Submit</ion-button>
 </ion-content>
-
-
-

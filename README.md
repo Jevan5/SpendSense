@@ -73,6 +73,12 @@ nodemon server.js <mode>
 
 `mode` Is either prod|dev|test. It is possible to have one instance of each mode running at the same time, since they each serve off different ports and connect to different databases.
 
+#### Google Application Credentials
+
+Before running the backend server, for receipt scanning functionality your local variable for `GOOGLE_APPLICATION_CREDENTIALS` must be set to your credentials file.
+
+For more information for local setup, or how to generate your credentials file, check the Google API documentation, [see here](https://cloud.google.com/vision/docs/quickstart-client-libraries).
+
 ### Secrets.json
 
 In the root of the project (same location as this README), a `secrets.json` file is required, with the following info (values must be filled out locally):

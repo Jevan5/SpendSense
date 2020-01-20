@@ -22,7 +22,7 @@ export class ModelService {
       this.http.get('http://' + environment.backEndIp + ':' + environment.backEndPort + '/' + modelClass.getModelName() + 's/' + id, this.authenticationService.getAuthorizationHeader())
       .subscribe((data) => {
         try {
-          var model = modelClass.createOneFromResponse(data);
+          var model = Model.createOneFromResponse(data, modelClass);
 
           resolve(model);
         } catch (e) {
@@ -52,10 +52,11 @@ export class ModelService {
         this.http.get('http://' + environment.backEndIp + ':' + environment.backEndPort + '/' + modelClass.getModelName() + 's/' + paramsString, this.authenticationService.getAuthorizationHeader())
         .subscribe((data) => {
           try {
-            var models = modelClass.createManyFromResponse(data);
+            var models = Model.createManyFromResponse(data, modelClass);
 
             resolve(models);
           } catch (e) {
+            console.log(e);
             reject(e);
           }
         }, (err) => {
@@ -70,31 +71,54 @@ export class ModelService {
   /**
    * Saves a model, by POSTing a new one if it does not exist,
    * or PUTing it if it already exists.
-   * @param model Model to save.
+   * @param model Document to save.
    * @returns Resolves with the saved model.
    */
   public save(model: Model): Promise<Model> {
     return new Promise((resolve, reject) => {
         var request: Observable<any>;
         if (model.hasField('_id')) {  // Updating
-          request = this.http.put('http://' + environment.backEndIp + ':' + environment.backEndPort + '/' + model.getClass().getModelName() + 's/' + model.getValue('_id'),
-          JSON.parse("{\"" + model.getClass().getModelName() + "\": " + JSON.stringify(model.toJson()) + "}"),
+          request = this.http.put('http://' + environment.backEndIp + ':' + environment.backEndPort + '/' + model.class.getModelName() + 's/' + model.getValue('_id'),
+          JSON.parse("{\"" + model.class.getModelName() + "\": " + JSON.stringify(model.toJson()) + "}"),
           this.authenticationService.getAuthorizationHeader());
         } else {  // Creating new
-          request = this.http.post('http://' + environment.backEndIp + ':' + environment.backEndPort + '/' + model.getClass().getModelName() + 's',
-          JSON.parse("{\"" + model.getClass().getModelName() + "\": " + JSON.stringify(model.toJson()) + "}"),
+          request = this.http.post('http://' + environment.backEndIp + ':' + environment.backEndPort + '/' + model.class.getModelName() + 's',
+          JSON.parse("{\"" + model.class.getModelName() + "\": " + JSON.stringify(model.toJson()) + "}"),
           this.authenticationService.getAuthorizationHeader());
         }
 
         request.subscribe((data) => {
           try {
-            resolve(model.getClass().createOneFromResponse(data));
+            resolve(Model.createOneFromResponse(data, model.class));
           } catch (e) {
             reject(e);
           }
         }, (err) => {
           reject(err.error);
         });
+    });
+  }
+
+  /**
+   * 
+   * @param models Models to save.
+   * @returns {Promise<Array<Model>>} Promise which resolves with the saved models.
+   */
+  public saveMany(models: Array<Model>): Promise<Array<Model>> {
+    return this.saveManyRec(models, new Array<Model>(), 0);
+  }
+
+  public saveManyRec(models: Array<Model>, savedModels: Array<Model>, index: number): Promise<Array<Model>> {
+    if (index === models.length) {
+      return new Promise<Array<Model>>((resolve, reject) => {
+        resolve(savedModels);
+      });
+    }
+
+    return this.save(models[index]).then((model) => {
+      savedModels.push(model);
+
+      return this.saveManyRec(models, savedModels, index + 1);
     });
   }
 

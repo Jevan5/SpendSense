@@ -5,7 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { Storage, IonicStorageModule } from '@ionic/storage';
-
+  
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -20,16 +20,17 @@ import { ProfileComponent } from 'src/app/pages/profile/profile.component';
 import { ReportsComponent } from 'src/app/pages/reports/reports.component';
 import { SearchComponent } from 'src/app/pages/search/search.component';
 
-import { NavbarComponent } from './components/navbar/navbar.component';
-import { ManualEntryComponent } from './pages/manual-entry/manual-entry.component';
+
 import { UploadImageComponent } from './pages/upload-image/upload-image.component';
 
-//import { AutoCompleteModule } from 'ionic4-auto-complete';
-
-//import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
 import { File } from '@ionic-native/File/ngx';
 import { Camera } from '@ionic-native/Camera/ngx';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
+import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
+import { ManualEntryComponent } from './pages/manual-entry/manual-entry.component';
+import { DropdownSearchComponent } from './components/dropdown-search/dropdown-search.component';
+import { CreateFranchiseComponent } from './pages/create-franchise/create-franchise.component';
+import { CreateLocationComponent } from './pages/create-location/create-location.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,11 @@ import { WebView } from '@ionic-native/ionic-webview/ngx';
     ManualEntryComponent,
     UploadImageComponent,
     ReportsComponent,
-    SearchComponent
+    SearchComponent,
+    ManualEntryComponent,
+    DropdownSearchComponent,
+    CreateFranchiseComponent,
+    CreateLocationComponent
   ],
   entryComponents: [],
   imports: [
@@ -56,7 +61,10 @@ import { WebView } from '@ionic-native/ionic-webview/ngx';
       { path: 'manual-entry', component: ManualEntryComponent},
       { path: 'upload-image', component: UploadImageComponent},
       { path: 'reports', component: ReportsComponent },
-      { path: 'search', component: SearchComponent }
+      { path: 'search', component: SearchComponent },
+      { path: 'manual-entry', component: ManualEntryComponent },
+      { path: 'create-franchise', component: CreateFranchiseComponent },
+      { path: 'create-location', component: CreateLocationComponent }
     ]),
     HttpClientModule,
     NgbModule,

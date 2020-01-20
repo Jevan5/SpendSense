@@ -1,8 +1,8 @@
 const mongoose      = require('mongoose');
 const Schema        = mongoose.Schema;
-const Location      = require('./location');
-const ReceiptItem   = require('./receiptItem');
-const logger        = require('../tools/logger');
+const Location      = require('../location/location');
+const ReceiptItem   = require('../receiptItem/receiptItem');
+const logger        = require('../../tools/logger');
 
 const LocationItemSchema = new Schema({
     _locationId: {

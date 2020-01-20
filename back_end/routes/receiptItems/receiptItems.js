@@ -1,9 +1,9 @@
 const express       = require('express');
 const router        = express.Router();
-const Receipt       = require('../../models/receipt');
-const ReceiptItem   = require('../../models/receiptItem');
-const SystemItem    = require('../../models/systemItem');
-const LocationItem  = require('../../models/locationItem');
+const Receipt       = require('../../models/receipt/receipt');
+const ReceiptItem   = require('../../models/receiptItem/receiptItem');
+const SystemItem    = require('../../models/systemItem/systemItem');
+const LocationItem  = require('../../models/locationItem/locationItem');
 const authorizer    = require('../../tools/authorizer');
 const promiseHelper = require('../../tools/promiseHelper');
 const logger        = require('../../tools/logger');
@@ -111,7 +111,7 @@ router.route('/:_id')
             receiptItem.systemItemId = req.body.receiptItem.systemItemId;
             receiptItem.name = req.body.receiptItem.name;
             receiptItem.price = req.body.receiptItem.price;
-            receiptItem.quantity = req.body.receiptItem.quantity;
+            receiptItem.amount = req.body.receiptItem.amount;
 
             return receiptItem.save();
         }).then(() => {

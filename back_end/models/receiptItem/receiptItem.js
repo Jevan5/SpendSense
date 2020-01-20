@@ -1,9 +1,6 @@
 const mongoose      = require('mongoose');
 const Schema        = mongoose.Schema;
-const LocationItem  = require('./locationItem');
-const Receipt       = require('./receipt');
-const SystemItem    = require('./systemItem');
-const logger        = require('../tools/logger');
+const logger        = require('../../tools/logger');
 
 const ReceiptItemSchema = new Schema({
     _receiptId: {
@@ -22,17 +19,17 @@ const ReceiptItemSchema = new Schema({
     }, price: {
         type: Number,
         required: [true, logger.isRequiredMessage()]
-    }, quantity: {
-        type: Number,
-        required: [true, logger.isRequiredMessage()]
+    }, amount: {
+        type: Number
     }
 });
 
-ReceiptItemSchema.pre('remove', (receiptItem) => {
-    return LocationItem.deleteMany({ _receiptItemId: receiptItem._id });
-});
-
 ReceiptItemSchema.pre('save', function(next) {
+    // Ensure the field exists, even if it's null
+    if (this.amount == null) {
+        this.amount = null;
+    }
+
     Receipt.findById(this._receiptId).then((receipt) => {
         if (!receipt) {
             throw new Error(logger.valueNotExistMessage(this._receiptId, '_receiptId'));
@@ -51,3 +48,7 @@ ReceiptItemSchema.pre('save', function(next) {
 });
 
 module.exports = mongoose.model('ReceiptItem', ReceiptItemSchema);
+
+const LocationItem  = require('../locationItem/locationItem');
+const Receipt       = require('../receipt/receipt');
+const SystemItem    = require('../systemItem/systemItem');

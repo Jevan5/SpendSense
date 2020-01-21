@@ -7,7 +7,13 @@ export class ScanReceiptService {
 
   constructor() { }
 
-  public parseScanForText = (file) => {
+  /**
+   * 
+   * function to parse the JSON string returned by google-cv-api into a receipt item
+   * @param file JSON-formatted string
+   * @returns {receipt} 
+   */
+  public parseScanForText(file: string): receipt {
     var json = JSON.parse(file);
     const pItems = [];
     var storeName = "";
@@ -98,6 +104,11 @@ class fItem {
   }
 }
 
+/**
+ * the final automatically generated receipt & items
+ * @param store store name
+ * @param items array of items
+ */
 class receipt {
   public store;
   public items;
@@ -108,6 +119,12 @@ class receipt {
   }
 }
 
+/**
+ * a row featuring an item name and price
+ * @param fItems array of fItems
+ * @param description collected item name for this row
+ * @param price the collected price for this row
+ */
 class fItemRow {
   public fItems;
   public description;
@@ -155,7 +172,7 @@ function getHeight(boundingPoly) {
 }
 function getAngle(boundingPoly) {
   var dy1, dy2;
-  
+
   dy1 = (boundingPoly.vertices[1].y - boundingPoly.vertices[0].y) / (boundingPoly.vertices[1].x - boundingPoly.vertices[0].x)
   dy2 = (boundingPoly.vertices[2].y - boundingPoly.vertices[3].y) / (boundingPoly.vertices[2].x - boundingPoly.vertices[3].x)
 

@@ -21,9 +21,10 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
+
                 "glob": "**/*",
-                "input": "src/assets",
-                "output": "assets"
+                "input": "node_modules/ionic4-auto-complete/assets/",
+                "output": "./assets/"
               },
               {
                 "glob": "**/*.svg",

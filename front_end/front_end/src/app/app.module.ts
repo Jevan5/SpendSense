@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { Storage, IonicStorageModule } from '@ionic/storage';
+  
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -19,6 +20,12 @@ import { ProfileComponent } from 'src/app/pages/profile/profile.component';
 import { ReportsComponent } from 'src/app/pages/reports/reports.component';
 import { SearchComponent } from 'src/app/pages/search/search.component';
 
+
+import { UploadImageComponent } from './pages/upload-image/upload-image.component';
+
+import { File } from '@ionic-native/File/ngx';
+import { Camera } from '@ionic-native/Camera/ngx';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
 import { ManualEntryComponent } from './pages/manual-entry/manual-entry.component';
 import { DropdownSearchComponent } from './components/dropdown-search/dropdown-search.component';
@@ -32,6 +39,8 @@ import { CreateLocationComponent } from './pages/create-location/create-location
     LoginComponent,
     NavbarComponent,
     ProfileComponent,
+    ManualEntryComponent,
+    UploadImageComponent,
     ReportsComponent,
     SearchComponent,
     ManualEntryComponent,
@@ -49,6 +58,8 @@ import { CreateLocationComponent } from './pages/create-location/create-location
       { path: 'home', component: HomeComponent },
       { path: 'login', component: LoginComponent },
       { path: 'profile', component: ProfileComponent },
+      { path: 'manual-entry', component: ManualEntryComponent},
+      { path: 'upload-image', component: UploadImageComponent},
       { path: 'reports', component: ReportsComponent },
       { path: 'search', component: SearchComponent },
       { path: 'manual-entry', component: ManualEntryComponent },
@@ -58,13 +69,20 @@ import { CreateLocationComponent } from './pages/create-location/create-location
     HttpClientModule,
     NgbModule,
     FormsModule,
+    // AutoCompleteModule,
     IonicStorageModule.forRoot()
   ],
   providers: [
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    { provide: Storage, useValue: new Storage({}) }
+    { provide: Storage, useValue: new Storage({}) },
+    //FileTransfer,
+    //FileUploadOptions,
+    //FileTransferObject,
+    File,
+    Camera,
+    WebView
   ],
   bootstrap: [AppComponent]
 })

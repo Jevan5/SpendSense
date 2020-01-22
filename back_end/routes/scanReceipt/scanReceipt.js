@@ -39,51 +39,49 @@ router.route('/')
         res.status(400).send(`GET not supported for endpoint: scanReceipt.`);
     })
     .post((req, res) => {
-
-        if (req.busboy) {
-            try {
-                req.pipe(req.busboy); // Pipe it trough busboy
-
-            } catch (err) {
-                console.log(err);
-                res.status(400).send(`Invalid post request; body must contain a valid image file.`);
-                return;
-            }
-
-            var fileName = '';
-            req.busboy.on('file', (fieldname, file, filename) => {
-                console.log(`Scan of '${filename}' started`);
-                dir = `./logs/scans/`
-                if (!fs.existsSync(dir)) {
-                    fs.mkdirSync(dir);
-                }
-
-                fileName = `${dir}${filename}`;
-                file.pipe(fs.createWriteStream(fileName))
-
-
-                // const visClient = new vision.ImageAnnotatorClient();
-
-                // const [result] = visClient.textDetection(`./${filename}`);
-                // const detections = result.textAnnotations;
-                // console.log('Text:');
-
-                // detections.forEach(text => console.log(text));
-
-                //res.status(200).send(file);
-                //console.log(`File: ${file}.`)
-            });
-            req.busboy.on('finish', function () {
-                quickstart(fileName).then(result => {
-                    console.log('done');
-                    res.status(200).send(result);
+        authorizer.authenticateRequest(req).then((user) => {
+            if (req.busboy) {
+                req.pipe(req.busboy);
+                
+                // try {
+                //     req.pipe(req.busboy); // Pipe it trough busboy
+    
+                // } catch (err) {
+                //     console.log(err);
+                //     res.status(400).send(`Invalid post request; body must contain a valid image file.`);
+                //     return;
+                // }
+    
+                var fileName = '';
+                req.busboy.on('file', (fieldname, file, filename) => {
+                    console.log(`Scan of '${filename}' started`);
+                    dir = `./logs/scans/`
+                    if (!fs.existsSync(dir)) {
+                        fs.mkdirSync(dir);
+                    }
+    
+                    fileName = `${dir}${filename}`;
+                    file.pipe(fs.createWriteStream(fileName));
                 });
-            });
-        } else {
-            console.log('Invalid post request made to scanReceipt endpoint.');
-            res.status(400).send(`Invalid post request; body must contain a valid image file.`);
-            return;
-        }
+                req.busboy.on('finish', function () {
+                    quickstart(fileName).then(result => {
+                        console.log('done');
+                        res.status(200).send(result);
+                    });
+                });
+            } else {
+                throw `Invalid post request; body must contain a valid image file.`;
+                // console.log('Invalid post request made to scanReceipt endpoint.');
+                // res.status(400).send(`Invalid post request; body must contain a valid image file.`);
+                // return;
+            }
+        }).catch((err) => {
+            if (!promiseHelper.hasLeftChain(err)) {
+                console.log(err);
+                res.status(400).send(err.toString());
+            }
+        })
+        
         // console.log(err)
         // res.status(400).send(`Invalid post request; body must contain a valid image file`).
     });

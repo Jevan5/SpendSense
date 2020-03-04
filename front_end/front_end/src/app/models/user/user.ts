@@ -1,4 +1,4 @@
-import { Model } from '../model/model';
+import { Model } from '../model';
 
 export class User extends Model {
     public readonly class = User;

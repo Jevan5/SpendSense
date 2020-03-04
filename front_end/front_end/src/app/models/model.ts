@@ -210,4 +210,38 @@ export abstract class Model {
 
         return models;
     }
+
+    /**
+     * Creates a mapping from document _id's to the associated document.
+     * @param documents Array of documents to create a mapping of.
+     * @returns The mapping from document _ids to their associated documents.
+     */
+    public static getMapping(documents: Array<Model>): Map<string, Model> {
+        let mapping = new Map<string, Model>();
+
+        let failed = '';
+        documents.forEach((document) => {
+            if (failed != '') {
+                return;
+            }
+
+            if (!document.hasField('_id')) {
+                failed = `_id field missing from ${JSON.stringify(document.toJson())}`;
+                return;
+            }
+
+            if (mapping.has(document.getValue('_id'))) {
+                failed = `_id (${document.getValue('_id')}) exists multiple times.`;
+                return;
+            }
+
+            mapping.set(document.getValue('_id'), document);
+        });
+
+        if (failed != '') {
+            throw failed;
+        }
+
+        return mapping;
+    }
 };

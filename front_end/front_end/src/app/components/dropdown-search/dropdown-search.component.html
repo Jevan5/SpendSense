@@ -1,7 +1,7 @@
-<ion-input type='text' debounce='500' (ionChange)='changeSearch($event)' [(ngModel)]='uiModel.searchText' [color]='getColour()' (ionBlur)='lostFocus($event)' (ionFocus)='gainedFocus($event)'></ion-input>
-<ion-list *ngIf='!hasSelected && uiModel.searchText != "" && focusingInput'>
+<ion-input type='text' debounce='500' (ionChange)='changeSearch($event)' [(ngModel)]='model.searchText' [color]='getColour()' (ionBlur)='lostFocus($event)' (ionFocus)='gainedFocus($event)'></ion-input>
+<ion-list *ngIf='!hasSelected && model.searchText != "" && focusingInput'>
   <div *ngFor='let item of items'>
-    <ion-item *ngIf='matchFunction(uiModel.searchText, item)' (click)='selectItem(item)'>
+    <ion-item *ngIf='matchFunction(model.searchText, item)' (click)='selectItem(item)'>
       {{displayFunction(item)}}
     </ion-item>
   </div>

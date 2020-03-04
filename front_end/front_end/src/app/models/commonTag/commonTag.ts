@@ -1,4 +1,4 @@
-import { Model } from 'src/app/models/model/model';
+import { Model } from 'src/app/models/model';
 
 export class CommonTag extends Model {
     public readonly class = CommonTag;

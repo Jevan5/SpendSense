@@ -164,10 +164,10 @@ export class LoadableComponent implements OnInit {
 
     if (state == this.StateEnum.LOADING) {
       if (this.loader != null) {
-        await this.loader.setAttribute('message', message);
+        await this.loader.setAttribute('message', this.message);
       } else {
         this.loader = await this.loadingController.create({
-          message: message
+          message: this.message
         });
   
         await this.loader.present();
@@ -196,7 +196,7 @@ export class LoadableComponent implements OnInit {
         }
 
         this.toast = await this.toastController.create({
-          message: message,
+          message: this.message,
           duration: duration,
           color: color,
           showCloseButton: true

@@ -21,7 +21,7 @@ module.exports = class UpdateCommonTags extends Job {
         let commonTags = [];
 
         return CommonTag.deleteMany().then(() => {
-            return Receipt.find({ date: { $lt: new Date(), $gte: new Date(new Date().setDate(new Date().getDate() - 14)) }});
+            return Receipt.find({ date: { $lt: new Date(), $gte: new Date(new Date().setDate(new Date().getDate() - 31)) }});
         }).then((receipts) => {
             let receiptIds = [];
 

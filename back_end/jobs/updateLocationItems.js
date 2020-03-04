@@ -17,11 +17,11 @@ module.exports = class UpdateLocationItems extends Job {
         let receiptItems = {};
         // Mapping from system item _ids to system items
         let systemItems = {};
-        // Mapping from location ids to mapping from name to mapping from tag to [<average price>, <count>]
+        // Mapping from location _ids to mapping from name to mapping from tag to [<average price>, <count>]
         let locationItems = {};
 
         return LocationItem.deleteMany().then(() => {  // Delete all location items
-            return Receipt.find({ date: { $lt: new Date(), $gte: new Date(new Date().setDate(new Date().getDate() - 14)) }, _locationId: { $ne: null } });
+            return Receipt.find({ date: { $lt: new Date(), $gte: new Date(new Date().setDate(new Date().getDate() - 31)) }, _locationId: { $ne: null } });
         }).then((r) => { // All receipts in the last two weeks which belong to a location
             let receiptIds = [];
 

@@ -77,7 +77,7 @@ export class LoginComponent extends LoadableComponent implements OnInit {
     }).then(() => {
       this.clearValues();
     }).catch((err) => {
-      this.setErrorMessage(err.error);
+      this.setErrorMessage(err);
     });
   }
 

@@ -12,14 +12,38 @@
     <ion-list lines='full' class='ion-no-margin ion-no-padding'>
       <ion-item>
         <ion-label position='stacked'>Item Name <ion-text color='danger'>*</ion-text></ion-label>
-        <ion-input type="text" [(ngModel)]='model.search.name'></ion-input>
+        <app-dropdown-search [items]='locationItemNames' (selectsItem)='search($event)'></app-dropdown-search>
       </ion-item>
     </ion-list>
-    <div class="ion-padding">
-      <ion-button expand="block" class="ion-no-margin" (click)='search()'>Search</ion-button>
-    </div>
     <br>
-    <table *ngIf='model.results.franchises != null' class="table">
+    <ion-list *ngIf='!isLoading()' lines='full'>
+      <ion-item-group *ngFor='let locationItem of model.locationItems'>
+        <ion-item-divider>
+          <ion-label>{{locationItem.getValue('tag')}}</ion-label>
+        </ion-item-divider>
+        <ion-item>
+          <ion-label>Price</ion-label>
+          <ion-label>{{locationItem.getValue('price')}}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Address</ion-label>
+          <ion-label>{{model.locations.get(locationItem.getValue('_locationId')).getValue('address')}}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>City</ion-label>
+          <ion-label>{{model.locations.get(locationItem.getValue('_locationId')).getValue('city')}}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Country</ion-label>
+          <ion-label>{{model.locations.get(locationItem.getValue('_locationId')).getValue('country')}}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Franchise</ion-label>
+          <ion-label>{{model.franchises.get(model.locations.get(locationItem.getValue('_locationId')).getValue('_franchiseId')).getValue('name')}}</ion-label>
+        </ion-item>
+      </ion-item-group>
+    </ion-list>
+    <!-- <table *ngIf='model.franchises != null' class="table">
       <thead class="thead-light">
         <tr>
           <th scope="col">Name</th>
@@ -30,14 +54,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let locationItem of model.results.locationItems">
+        <tr *ngFor="let locationItem of model.locationItems">
           <th scope="row">{{locationItem.getValue('name')}}</th>
           <td>{{locationItem.getValue('tag')}}</td>
           <td>{{locationItem.getValue('price')}}</td>
-          <td>{{model.results.locations.get(locationItem.getValue('_locationId')).getValue('address')}}, {{model.results.locations.get(locationItem.getValue('_locationId')).getValue('city')}}, {{model.results.locations.get(locationItem.getValue('_locationId')).getValue('country')}}</td>
-          <td>{{model.results.franchises.get(model.results.locations.get(locationItem.getValue('_locationId')).getValue('_franchiseId')).getValue('name')}}</td>
+          <td>{{model.locations.get(locationItem.getValue('_locationId')).getValue('address')}}, {{model.locations.get(locationItem.getValue('_locationId')).getValue('city')}}, {{model.locations.get(locationItem.getValue('_locationId')).getValue('country')}}</td>
+          <td>{{model.franchises.get(model.locations.get(locationItem.getValue('_locationId')).getValue('_franchiseId')).getValue('name')}}</td>
         </tr>
       </tbody>
-    </table>
+    </table> -->
   </div>
 </ion-content>

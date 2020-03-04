@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../../models/user/user';
 import { environment } from '../../../environments/environment';
 import { Storage } from '@ionic/storage';
-import { Model } from 'src/app/models/model/model';
+import { Model } from 'src/app/models/model';
 
 @Injectable({
   providedIn: 'root'

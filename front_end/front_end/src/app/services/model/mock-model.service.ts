@@ -1,4 +1,4 @@
-import { Model } from 'src/app/models/model/model';
+import { Model } from 'src/app/models/model';
 import { MockAuthenticationService } from '../authentication/mock-authentication.service';
 
 export class MockModelService {

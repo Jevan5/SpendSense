@@ -46,6 +46,7 @@ describe("Tests", () => {
         runTest("Franchise", "./models/franchise/franchise.test.js");
         runTest("Location", "./models/location/location.test.js");
         runTest("Receipt", "./models/receipt/receipt.test.js");
+        runTest("ReceiptItem", "./models/receiptItem/receiptItem.test.js");
         runTest("SystemItem", "./models/systemItem/systemItem.test.js");
     });
 

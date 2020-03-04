@@ -44,7 +44,7 @@ export class ReportsComponent extends LoadableComponent implements OnInit {
       BY_TAG: 'By Tag',
       OVER_TIME: 'Over Time'
     };
-    var now = new Date();
+    var now = ReportsComponent.addDaysToDate(new Date(), 1);
     var monthAgo = ReportsComponent.addDaysToDate(now, -31);
     this.model = {
       startDate: monthAgo.getFullYear() + '-' + (monthAgo.getMonth() + 1) + '-' + monthAgo.getDate(),
@@ -147,7 +147,7 @@ export class ReportsComponent extends LoadableComponent implements OnInit {
         tagSpendingTotals.set(tag, 0);
       }
 
-      tagSpendingTotals.set(tag, tagSpendingTotals.get(tag) + receiptItem.getValue('price') * receiptItem.getValue('quantity'));
+      tagSpendingTotals.set(tag, tagSpendingTotals.get(tag) + receiptItem.getValue('price'));
     });
 
     var tagArray = [];
@@ -196,7 +196,6 @@ export class ReportsComponent extends LoadableComponent implements OnInit {
         var start = this.getStartDate();
         var nextDate = ReportsComponent.addDaysToDate(start, Math.ceil(daysPassed));
         dates.push(nextDate);
-        // dates.push(ReportsComponent.addDaysToDate(this.getStartDate(), Math.ceil(daysPassed)));
         daysPassed += averageRange;
       }
 
@@ -258,11 +257,7 @@ export class ReportsComponent extends LoadableComponent implements OnInit {
         var systemItem = this.data.systemItems.get(receiptItem.getValue('_systemItemId'));
         var tag = systemItem.getValue('tag');
 
-        var price = receiptItem.getValue('price');
-        var quantity = receiptItem.getValue('quantity');
-        var cost = price * quantity;
-
-        tagSpendingTotals.set(tag, tagSpendingTotals.get(tag) + cost);
+        tagSpendingTotals.set(tag, tagSpendingTotals.get(tag) + receiptItem.getValue('price'));
       });
 
       // Add the total spent on each tag up until endDate to the dataset

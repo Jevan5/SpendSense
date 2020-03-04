@@ -13,6 +13,8 @@ import { AuthenticationService } from './services/authentication/authentication.
   styleUrls: ['app.component.scss']
 })
 export class AppComponent {
+  public loggedInURLs = ['/profile', '/reports', '/search', '/manual-entry', '/create-franchise', '/create-location', '/upload-image', '/view-receipts', '/tutorial'];
+  public loggedOutURLs = ['/login'];
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
@@ -22,16 +24,14 @@ export class AppComponent {
   ) {
     this.initializeApp();
 
-    var loggedInURLs = ['/profile', '/reports', '/search', '/manual-entry', '/create-franchise', '/create-location', '/upload-image'];
-    var loggedOutURLs = ['/login'];
     // Can't navigate to login page if they're logged in
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
-        if (loggedInURLs.indexOf(event.url) >= 0) { // URL which needs to be logged in for
+        if (this.urlMatches(event.url, this.loggedInURLs)) { // URL which needs to be logged in for
           if (!this.authenticationService.isLoggedIn()) {
             this.router.navigate(['/home']);
           }
-        } else if (loggedOutURLs.indexOf(event.url) >= 0) { // URL which you can't be logged in for
+        } else if (this.urlMatches(event.url, this.loggedOutURLs)) { // URL which you can't be logged in for
           if (this.authenticationService.isLoggedIn()) {
             this.router.navigate(['/home']);
           }
@@ -45,5 +45,17 @@ export class AppComponent {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     });
+  }
+
+  public urlMatches(url: string, toMatchAgainst: Array<string>): boolean {
+    let matched = false;
+
+    toMatchAgainst.forEach((matchingAgainst) => {
+      if (url.indexOf(matchingAgainst) >= 0) {
+        matched = true;
+      }
+    });
+
+    return matched;
   }
 }

@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Tutorial</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+  <br>
+  <app-introduction-tutorial *ngIf='page === 0'></app-introduction-tutorial>
+  <app-upload-image-tutorial *ngIf='page === 1'></app-upload-image-tutorial>
+  <app-manual-entry-tutorial *ngIf='page === 2'></app-manual-entry-tutorial>
+  <app-view-receipts-tutorial *ngIf='page === 3'></app-view-receipts-tutorial>
+  <app-reports-tutorial *ngIf='page === 4'></app-reports-tutorial>
+  <app-search-tutorial *ngIf='page === 5'></app-search-tutorial>
+  <app-profile-tutorial *ngIf='page === 6'></app-profile-tutorial>
+  <br>
+  <div class='row'>
+    <div class='col'>
+      <ion-button *ngIf='page > 0' expand='block' class='ion-no-margin' (click)='setPage(page - 1)'>Previous</ion-button>
+    </div>
+    <div class='col'>
+      <ion-button *ngIf='page < 6' expand='block' class='ion-no-margin' (click)='setPage(page + 1)'>Next</ion-button>
+    </div>
+  </div>
+  <br>
+</ion-content>

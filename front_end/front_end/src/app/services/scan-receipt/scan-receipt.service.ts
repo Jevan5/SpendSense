@@ -1,22 +1,48 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { AuthenticationService } from '../authentication/authentication.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ScanReceiptService {
+  private lastReceipt: receipt;
 
-  constructor() { }
+  constructor(public httpClient: HttpClient,
+    public authenticationService: AuthenticationService) { }
+
+  public scanReceipt(formData: FormData): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      this.httpClient.post('http://' + environment.backEndIp + ':' + environment.backEndPort + '/scanReceipt',
+      formData,
+      this.authenticationService.getAuthorizationHeader()).subscribe((res: any) => {
+        let r = this.parseScanForText(res);
+        this.lastReceipt = r;
+        resolve(this.lastReceipt);
+      }, (err) => {
+        reject(err);
+      });
+    });
+  }
+
+  public getLastReceipt(): receipt {
+    return this.lastReceipt;
+  }
+
+  public clearLastReceipt(): void {
+    this.lastReceipt = null;
+  }
 
   /**
-   * 
-   * function to parse the JSON string returned by google-cv-api into a receipt item
+   * Function to parse the JSON string returned by google-cv-api into a receipt item
    * @param file JSON-formatted string
    * @returns {receipt} 
    */
-  public parseScanForText(file: string): receipt {
-    var json = JSON.parse(file);
+  public parseScanForText(file): receipt {
+    let json = file;
     const pItems = [];
-    var storeName = "";
+    var storeName = null;
 
     json.forEach(el => {
       if (getHeight(el.boundingPoly) < 100) {
@@ -51,7 +77,7 @@ export class ScanReceiptService {
       if (newItem != null) {
         itemRows.push(newItem);
       }
-    })
+    });
 
     var finalRows = [];
 
@@ -59,17 +85,15 @@ export class ScanReceiptService {
       el.fItems.sort(sortByX);
       if (/[0-9]+\.[0-9]{2}/.test(el.fItems[el.fItems.length - 1].desc)) {
         finalRows.push(el);
-        console.log(el.fItems);
       }
-    })
+    });
 
     finalRows.forEach(el => {
       el.getPriceAsLastItem();
-    })
+    });
 
     var finalReceipt = new receipt(storeName, finalRows);
 
-    console.log(finalReceipt);
     return finalReceipt;
   }
 }
@@ -110,8 +134,8 @@ class fItem {
  * @param items array of items
  */
 class receipt {
-  public store;
-  public items;
+  public store: string;
+  public items: Array<fItemRow>;
 
   constructor(store, items) {
     this.store = store;
@@ -202,7 +226,7 @@ function sortByX(A, B) {
 }
 
 function inline(pItemA, pItemB) {
-  const heightFlex = 0.8 // manage the leniency for how well points line up
+  const heightFlex = 0.2 // manage the leniency for how well points line up
   var dist = pItemB.x - pItemA.x
 
   if (dist <= 0) return false;
@@ -212,11 +236,11 @@ function inline(pItemA, pItemB) {
 
 
   // 1: more lenient check
-  //if (finY > pItemB.y - (pItemB.height * heightFlex) && finY < pItemB.y + (pItemB.height * heightFlex)) return true;
+  if (finY > pItemB.y - (pItemB.height * heightFlex) && finY < pItemB.y + (pItemB.height * heightFlex)) return true;
 
   // 2: more strict check
-  if (finY > pItemB.y - (pItemB.height * heightFlex) && finY < pItemB.y + (pItemB.height * heightFlex) &&
-    finY2 > pItemA.y - (pItemA.height * heightFlex) && finY2 < pItemA.y + (pItemA.height * heightFlex)) return true;
+  // if (finY > pItemB.y - (pItemB.height * heightFlex) && finY < pItemB.y + (pItemB.height * heightFlex) &&
+  //   finY2 > pItemA.y - (pItemA.height * heightFlex) && finY2 < pItemA.y + (pItemA.height * heightFlex)) return true;
 
   return false;
 }

@@ -1,4 +1,4 @@
-import { Model } from 'src/app/models/model/model';
+import { Model } from 'src/app/models/model';
 
 export class LocationItem extends Model {
     public readonly class = LocationItem;

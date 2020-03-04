@@ -54,7 +54,6 @@ router.route('/')
     
                 var fileName = '';
                 req.busboy.on('file', (fieldname, file, filename) => {
-                    console.log(`Scan of '${filename}' started`);
                     dir = `./logs/scans/`
                     if (!fs.existsSync(dir)) {
                         fs.mkdirSync(dir);
@@ -65,8 +64,8 @@ router.route('/')
                 });
                 req.busboy.on('finish', function () {
                     quickstart(fileName).then(result => {
-                        console.log('done');
                         res.status(200).send(result);
+                        fs.unlink(fileName, () => {});
                     });
                 });
             } else {
@@ -80,7 +79,7 @@ router.route('/')
                 console.log(err);
                 res.status(400).send(err.toString());
             }
-        })
+        });
         
         // console.log(err)
         // res.status(400).send(`Invalid post request; body must contain a valid image file`).

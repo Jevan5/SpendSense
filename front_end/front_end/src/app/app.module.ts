@@ -31,6 +31,15 @@ import { ManualEntryComponent } from './pages/manual-entry/manual-entry.componen
 import { DropdownSearchComponent } from './components/dropdown-search/dropdown-search.component';
 import { CreateFranchiseComponent } from './pages/create-franchise/create-franchise.component';
 import { CreateLocationComponent } from './pages/create-location/create-location.component';
+import { ViewReceiptsComponent } from './pages/view-receipts/view-receipts.component';
+import { TutorialComponent } from './pages/tutorial/tutorial.component';
+import { IntroductionTutorialComponent } from './components/tutorial/introduction-tutorial/introduction-tutorial.component';
+import { UploadImageTutorialComponent } from './components/tutorial/upload-image-tutorial/upload-image-tutorial.component';
+import { ManualEntryTutorialComponent } from './components/tutorial/manual-entry-tutorial/manual-entry-tutorial.component';
+import { ViewReceiptsTutorialComponent } from './components/tutorial/view-receipts-tutorial/view-receipts-tutorial.component';
+import { ReportsTutorialComponent } from './components/tutorial/reports-tutorial/reports-tutorial.component';
+import { SearchTutorialComponent } from './components/tutorial/search-tutorial/search-tutorial.component';
+import { ProfileTutorialComponent } from './components/tutorial/profile-tutorial/profile-tutorial.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +55,16 @@ import { CreateLocationComponent } from './pages/create-location/create-location
     ManualEntryComponent,
     DropdownSearchComponent,
     CreateFranchiseComponent,
-    CreateLocationComponent
+    CreateLocationComponent,
+    ViewReceiptsComponent,
+    TutorialComponent,
+    IntroductionTutorialComponent,
+    UploadImageTutorialComponent,
+    ManualEntryTutorialComponent,
+    ViewReceiptsTutorialComponent,
+    ReportsTutorialComponent,
+    SearchTutorialComponent,
+    ProfileTutorialComponent
   ],
   entryComponents: [],
   imports: [
@@ -64,12 +82,13 @@ import { CreateLocationComponent } from './pages/create-location/create-location
       { path: 'search', component: SearchComponent },
       { path: 'manual-entry', component: ManualEntryComponent },
       { path: 'create-franchise', component: CreateFranchiseComponent },
-      { path: 'create-location', component: CreateLocationComponent }
+      { path: 'create-location', component: CreateLocationComponent },
+      { path: 'view-receipts', component: ViewReceiptsComponent },
+      { path: 'tutorial', component: TutorialComponent }
     ]),
     HttpClientModule,
     NgbModule,
     FormsModule,
-    // AutoCompleteModule,
     IonicStorageModule.forRoot()
   ],
   providers: [
@@ -77,9 +96,6 @@ import { CreateLocationComponent } from './pages/create-location/create-location
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: Storage, useValue: new Storage({}) },
-    //FileTransfer,
-    //FileUploadOptions,
-    //FileTransferObject,
     File,
     Camera,
     WebView

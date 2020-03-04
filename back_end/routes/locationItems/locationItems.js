@@ -14,10 +14,10 @@ router.route('/')
     .get((req, res) => {
         authorizer.authenticateRequest(req).then((user) => {
             if (req.query.name == null) {
-                throw new Error(logger.fieldMissingMessage('params.name'));
+                return LocationItem.find();
+            } else {
+                return LocationItem.find({ name: req.query.name });
             }
-
-            return LocationItem.find({ name: req.query.name });
         }).then((locationItems) => {
             res.send({ locationItems: locationItems });
         }).catch((err) => {

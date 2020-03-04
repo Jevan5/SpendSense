@@ -13,29 +13,44 @@ import { reject } from 'q';
   styleUrls: ['./search.component.scss'],
 })
 export class SearchComponent extends LoadableComponent implements OnInit {
-  private model: {
-    search: {
-      name: string
-    }, results: {
-      locationItems: Array<LocationItem>,
-      locations: Map<string, Location>,
-      franchises: Map<string, Franchise>
-    }
+  public model: {
+    locationItems: Array<LocationItem>,
+    locations: Map<string, Location>,
+    franchises: Map<string, Franchise>
   };
+  public locationItems: Array<LocationItem>;
+  public locationItemNames: Array<string>;
 
   constructor(public loadingController: LoadingController,
     public toastController: ToastController,
     public modelService: ModelService) {
     super(loadingController, toastController);
     this.model = {
-      search: {
-        name: ''
-      }, results: {
-        locationItems: null,
-        locations: null,
-        franchises: null
-      }
+      locationItems: null,
+      locations: null,
+      franchises: null
     };
+
+    this.setLoadingMessage('Finding location items...').then(() => {
+      return this.modelService.getAll(LocationItem);
+    }).then((locationItems) => {
+      this.locationItems = locationItems;
+
+      this.locationItemNames = [];
+      let locationItemNamesSet = new Set();
+
+      this.locationItems.forEach((locationItem) => {
+        if (!locationItemNamesSet.has(locationItem.getValue('name'))) {
+          locationItemNamesSet.add(locationItem.getValue('name'));
+
+          this.locationItemNames.push(locationItem.getValue('name'));
+        };
+      });
+
+      return this.clearMessage();
+    }).catch((err) => {
+      this.setErrorMessage(err);
+    });
   }
 
   ngOnInit() {}
@@ -45,39 +60,41 @@ export class SearchComponent extends LoadableComponent implements OnInit {
    * From these location items, uses their _locationId to retrieve
    * the location information for each location item, and the _franchiseId
    * from each location for information on each franchise.
+   * @param {string} name Name to search for.
    */
-  public search(): void {
-    this.model.results = {
+  public search(name: string): void {
+    this.model = {
       locationItems: null,
       locations: null,
       franchises: null
     };
 
     var params = new Map<string, string>();
-    params.set('name', this.model.search.name);
-    this.setLoadingMessage('Searching for items named "' + this.model.search.name + '"').then(() => {
+    params.set('name', name);
+
+    this.setLoadingMessage(`Searching for items name "${name}"`).then(() => {
       return this.modelService.getAll(LocationItem, params);
     }).then((locationItems: Array<LocationItem>) => {
       if (locationItems.length === 0) {
         return this.setWarningMessage('No items found.');
       } else {
-        this.model.results.locationItems = locationItems;
-        this.model.results.locationItems.sort((a, b) => {
+        this.model.locationItems = locationItems;
+        this.model.locationItems.sort((a, b) => {
           return a.getValue('price') - b.getValue('price');
         });
 
-        return this.findLocations(this.model.results.locationItems).then((locationsMap) => {
-          this.model.results.locations = locationsMap;
-          return this.findFranchises(this.model.results.locations);
+        return this.findLocations(this.model.locationItems).then((locationsMap) => {
+          this.model.locations = locationsMap;
+          return this.findFranchises(this.model.locations);
         }).then((franchisesMap) => {
-          this.model.results.franchises = franchisesMap;
+          this.model.franchises = franchisesMap;
           return this.clearMessage();
         }).catch((err) => {
           reject(err);
         });
       }
     }).catch((err) => {
-      this.model.results = {
+      this.model = {
         locationItems: null,
         locations: null,
         franchises: null

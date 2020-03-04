@@ -1,82 +1,106 @@
-import { Component, OnInit, Input, Output, EventEmitter, forwardRef } from '@angular/core';
-import { NgModel } from '@angular/forms';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-
-class ValueAccessorBase<T> implements ControlValueAccessor {
-  private innerValue: T;
-
-  private changed = new Array<(value: T) => void>();
-  private touched = new Array<() => void>();
-
-  get value(): T {
-    return this.innerValue;
-  }
-
-  set value(value: T) {
-    if (this.innerValue !== value) {
-      this.innerValue = value;
-      this.changed.forEach(f => f(value));
-    }
-  }
-
-  touch() {
-    this.touched.forEach(f => f());
-  }
-
-  writeValue(value: T) {
-    this.innerValue = value;
-  }
-
-  registerOnChange(fn: (value: T) => void) {
-    this.changed.push(fn);
-  }
-
-  registerOnTouched(fn: () => void) {
-    this.touched.push(fn);
-  }
-}
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-dropdown-search',
   templateUrl: './dropdown-search.component.html',
-  styleUrls: ['./dropdown-search.component.scss'],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => DropdownSearchComponent),
-      multi: true
-    }
-  ]
+  styleUrls: ['./dropdown-search.component.scss']
 })
-export class DropdownSearchComponent extends ValueAccessorBase<any> implements OnInit {
-  @Input() startingItem: any;
+export class DropdownSearchComponent implements OnInit {
+  /**
+   * Underlying value of the dropdown search component. Will be the item that is selected,
+   * null if unselected, or the text that is orange.
+   */
+  public _value: any;
+  /**
+   * Items which fill the dropdown menu as options.
+   */
   @Input() items: Array<any>;
-  @Input() displayFunction: (item: any) => any;
+  /**
+   * How to display an item as a string.
+   */
+  @Input() displayFunction: (item: any) => string;
+  /**
+   * How to determine if an item matches against the text in the text box.
+   */
   @Input() matchFunction: (text: string, item: any) => boolean;
+  private settingValueToTextNotItem: boolean;
+  /**
+   * Two-way binded value for this dropdown search.
+   */
+  @Input() set value(value: any) {
+    this._value = value;
+
+    if (value != null) {
+      if (this.settingValueToTextNotItem) {
+        this.hasSelected = false;
+        this.model = {
+          searchText: value
+        };
+
+        setTimeout(() => {
+          this.settingValueToTextNotItem = false;
+        }, 50);
+      } else {
+        this.hasSelected = true;
+        this.model = {
+          searchText: this.displayFunction(value)
+        };
+      }
+
+      this.selectedBuffer = false;
+    } else {
+      this.model = {
+        searchText: ''
+      };
+      this.hasSelected = false;
+    }
+
+    this.valueChange.emit(this.value);
+  }
+  get value(): any {
+    return this._value;
+  }
+
+  @Output() valueChange = new EventEmitter<any>();
+  /**
+   * Emitted when an item is selected.
+   */
   @Output() selectsItem = new EventEmitter<any>();
+  /**
+   * Emitted when an item is unselected.
+   */
   @Output() unselectsItem = new EventEmitter<any>();
+  /**
+   * Emitted when the user clicks away without selecting.
+   */
   @Output() losesFocus = new EventEmitter<any>();
 
-  protected model: NgModel;
-
+  /**
+   * Whether or not the text box has focus.
+   */
   public focusingInput: boolean;
+  /**
+   * Whether or not an item has been selected last.
+   */
   public hasSelected: boolean;
+  /**
+   * Buffer between selecting an item and changing the textbox text.
+   */
   public selectedBuffer: boolean;
-  public selectedItem: any;
-  public uiModel: {
+  /**
+   * Text displayed in the textbox.
+   */
+  public model: {
     searchText: string
   };
 
-  constructor() {
-    super();
-  }
+  constructor() { }
 
   ngOnInit() {
-    this.uiModel = {
+    this.settingValueToTextNotItem = false;
+    this.model = {
       searchText: ''
     };
-
-    this.value = this.startingItem;
 
     this.focusingInput = false;
 
@@ -93,28 +117,34 @@ export class DropdownSearchComponent extends ValueAccessorBase<any> implements O
     if (this.value != null) {
       this.hasSelected = true;
       this.selectedBuffer = false;
-      this.selectedItem = this.value;
-      this.uiModel.searchText = this.displayFunction(this.selectedItem);
+      this.model.searchText = this.displayFunction(this.value);
     } else {
       this.hasSelected = false;
-      this.selectedItem = null;
       this.selectedBuffer = false;
     }
   }
 
+  /**
+   * Called when an item is selected from the dropdown menu.
+   * @param item Item selected.
+   */
   public selectItem(item: any): void {
-    this.selectedItem = item;
-    this.uiModel.searchText = this.displayFunction(item);
+    this.model.searchText = this.displayFunction(item);
     this.hasSelected = true;
     this.selectedBuffer = false;
+    this.value = item;
+
+    this.selectsItem.emit(this.value);
   }
 
+  /**
+   * Called when the text data is changed.
+   * @param ev Event.
+   */
   public changeSearch(ev): void {
     if (this.hasSelected && !this.selectedBuffer) {
       // The text was changed automatically by selecting an item
-      this.value = this.selectedItem;
       this.selectedBuffer = true;
-      this.selectsItem.emit(this.selectedItem);
       return;
     }
 
@@ -124,25 +154,38 @@ export class DropdownSearchComponent extends ValueAccessorBase<any> implements O
     }
 
     this.hasSelected = false;
-    this.selectedItem = null;
   }
 
+  /**
+   * Called when the text input loses focus.
+   * @param ev Event.
+   */
   public lostFocus(ev: any): void {
     // lostFocus() is called before selectItem(), which disables selectItem() 
     setTimeout(() => {
       this.focusingInput = false;
 
       if (!this.hasSelected) {
-        this.value = this.uiModel.searchText;
-        this.losesFocus.emit(this.uiModel.searchText);
+        this.settingValueToTextNotItem = true;
+        this.value = this.model.searchText;
+        this.losesFocus.emit(this.model.searchText);
       }
     }, 0);
   }
 
+  /**
+   * Called when the text input gains focus.
+   * @param ev Event.
+   */
   public gainedFocus(ev: any): void {
     this.focusingInput = true;
   }
 
+  /**
+   * Gets the colour for the text input based on the state of
+   * this dropdown search.
+   * @returns {string} Colour that the text in the text input should be.
+   */
   public getColour(): string {
     if (this.hasSelected) {
       return 'success';

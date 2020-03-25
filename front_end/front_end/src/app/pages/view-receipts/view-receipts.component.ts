@@ -15,7 +15,9 @@ import { Router } from '@angular/router';
 export class ViewReceiptsComponent extends LoadableComponent implements OnInit {
   private receipts: Array<{
     receipt: Receipt,
-    franchise: string
+    franchiseId: string,
+    franchise: Franchise,
+    location: Location
   }>;
 
   constructor(public modelService: ModelService,
@@ -32,18 +34,21 @@ export class ViewReceiptsComponent extends LoadableComponent implements OnInit {
       rs.forEach((r) => {
         this.receipts.push({
           receipt: r,
-          franchise: ''
+          franchiseId: null,
+          franchise: null,
+          location: null
         });
       });
 
       return this.setLoadingMessage('Loading locations...');
     }).then(() => {
       return this.modelService.getAll(Location);
-    }).then((ls) => {
-      let locationMapping = Location.getMapping(ls);
+    }).then((locations) => {
+      let locationMapping = Location.getMapping(locations);
 
       this.receipts.forEach((receipt) => {
-        receipt.franchise = locationMapping.get(receipt.receipt.getValue('_locationId')).getValue('_franchiseId');
+        receipt.location = locationMapping.get(receipt.receipt.getValue('_locationId'));
+        receipt.franchiseId = receipt.location.getValue('_franchiseId');
       });
 
       return this.setLoadingMessage('Loading franchises...');
@@ -53,7 +58,7 @@ export class ViewReceiptsComponent extends LoadableComponent implements OnInit {
       let franchiseMapping = Franchise.getMapping(fs);
 
       this.receipts.forEach((receipt) => {
-        receipt.franchise = franchiseMapping.get(receipt.franchise).getValue('name');
+        receipt.franchise = franchiseMapping.get(receipt.franchiseId);
       });
 
       this.receipts.sort((a, b) => { return b.receipt.getValue('date').getTime() - a.receipt.getValue('date').getTime() });

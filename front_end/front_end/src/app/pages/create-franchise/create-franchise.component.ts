@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Franchise } from '../../models/franchise/franchise';
 import { ModelService } from '../../services/model/model.service';
 import { LoadableComponent } from '../../components/loadable/loadable.component';
@@ -15,7 +16,8 @@ export class CreateFranchiseComponent extends LoadableComponent implements OnIni
     name: string
   };
 
-  constructor(public modelService: ModelService,
+  constructor(public router: Router,
+    public modelService: ModelService,
     public toastController: ToastController,
     public loadingController: LoadingController) {
     
@@ -33,7 +35,9 @@ export class CreateFranchiseComponent extends LoadableComponent implements OnIni
     franchise.setValue('name', this.model.name);
 
     this.modelService.save(franchise).then((f) => {
-      this.setSuccessMessage(`${f.getValue('name')} created!`);
+      return this.setSuccessMessage(`${f.getValue('name')} created!`);
+    }).then(() => {
+      this.router.navigate(['/home']);
     }).catch((err) => {
       this.setErrorMessage(err);
     });

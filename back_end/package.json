@@ -4,12 +4,22 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test --exit --timeout 30000",
+    "start": "nodemon server.js prod"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/vision": "^1.7.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "connect-busboy": "0.0.2",
     "express": "^4.17.1",
-    "mongoose": "^5.7.6"
+    "file-system": "^2.2.2",
+    "mocha": "^6.2.2",
+    "mongoose": "^5.7.6",
+    "mongoose-unique-validator": "^2.0.3",
+    "nodemailer": "^6.3.1",
+    "nodemon": "^1.19.4"
   }
 }

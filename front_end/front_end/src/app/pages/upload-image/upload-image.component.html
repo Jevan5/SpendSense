@@ -1,0 +1,16 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+    <ion-title>Upload Image</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class='ion-padding'>
+    <ion-item>
+      <input #file type="file" accept='image/*' (change)="onFileSelected($event)"/>
+      <img [src]="imageURL" height="200" *ngIf="imageURL">
+    </ion-item>
+</ion-content>

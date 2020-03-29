@@ -49,6 +49,8 @@ Navigate to the front end directory, update your dependencies, and start the ion
 ```sh
 cd <clone_directory>/front_end
 npm i
+cd front_end
+npm i
 ionic serve
 ```
 
@@ -66,11 +68,101 @@ Navigate to the back end directory, update your dependencies, and start the node
 ```sh
 cd <clone_directory>/back_end
 npm i
-# mode is either 'test' or 'prod'
-node server.js <mode>
+nodemon server.js <mode>
+```
+
+`mode` Is either prod|dev|test. It is possible to have one instance of each mode running at the same time, since they each serve off different ports and connect to different databases.
+
+#### Google Application Credentials
+
+Before running the backend server, for receipt scanning functionality your local variable for `GOOGLE_APPLICATION_CREDENTIALS` must be set to your credentials file.
+
+For more information for local setup, or how to generate your credentials file, check the Google API documentation, [see here](https://cloud.google.com/vision/docs/quickstart-client-libraries).
+
+### Secrets.json
+
+In the root of the project (same location as this README), a `secrets.json` file is required, with the following info (values must be filled out locally):
+
+```json
+{
+    "emailAddress": <admin_email>,
+    "emailPassword": <admin_email_password>,
+    "visionApiToken": <google_api_token>
+}
 ```
 
 ## Contributing
+
+### Testing
+
+Before submitting changes, make sure the tests for the backend and frontend are working. Try to implement as much test coverage as you can for your code.
+
+#### Back End
+
+Run the following command in the back end directory to run tests:
+
+```sh
+npm test
+```
+
+#### Front End
+
+The front end contains tests cases which query the backend, so ensure the backend is running a dev instance:
+
+```sh
+nodemon server.js dev
+```
+
+Run the following command in the front end directory to run tests:
+
+```sh
+ng test
+```
+
+### Ionic Development
+
+Create re-usable components by running:
+
+```sh
+ionic g component components/<component-name>
+```
+
+`<component-name>` Is the name of the new component, all lowercase and hyphenated.
+
+Create injectible services by running:
+
+```sh
+ionic g service services/<service-name>/<service-name>
+```
+
+`<service-name>` Is the name of the new service, all lowercase and hyphenated.
+
+Create new pages by running:
+
+```sh
+ionic g component pages/<page-name>
+```
+
+`<page-name>` Is the name of the new page, all lowercase and hyphenated.
+
+### Express Development
+
+Create a new model by creating a .js file for it in models/:
+
+```sh
+type nul > models/<modelName>.js
+```
+
+`<modelName>` Is the model's singular name in camel-case.
+
+Create a new route by creating a directory and file for it in routes/:
+
+> If the route is for a model, make sure the name is pluralized.
+
+```sh
+mkdir routes/<routeName>
+type nul > routes/<routeName>/<routeName>.js
+```
 
 ### Pushing
 

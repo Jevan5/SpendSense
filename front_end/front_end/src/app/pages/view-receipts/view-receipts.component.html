@@ -9,10 +9,10 @@
 
 <ion-content>
   <div class='ion-padding'>
-    <ion-list lines='full' class='ion-no-margin ion-no-padding'>
+    <ion-list *ngIf='!isLoading()' lines='full' class='ion-no-margin ion-no-padding'>
       <ion-item *ngFor='let receipt of receipts'>
-        <ion-label>{{receipt.franchise}}<br>{{receipt.receipt.getValue('date').getFullYear()}}-{{receipt.receipt.getValue('date').getMonth() + 1}}-{{receipt.receipt.getValue('date').getDate()}}</ion-label>
-        <ion-button (click)='editReceipt(receipt.receipt)'>Edit</ion-button>
+        <ion-label>{{receipt.franchise.getValue('name')}}<br>{{receipt.location.getValue('address')}}<br>{{receipt.receipt.getValue('date').getFullYear()}}-{{receipt.receipt.getValue('date').getMonth() + 1}}-{{receipt.receipt.getValue('date').getDate()}}</ion-label>
+        <ion-button (click)='editReceipt(receipt.receipt)'>View/Edit</ion-button>
         <ion-button color='danger' (click)='deleteReceipt(receipt.receipt)'>Delete</ion-button>
       </ion-item>
     </ion-list>

@@ -104,6 +104,7 @@ router.route('/')
 router.route('/:_id')
     // Updating an existing account. Can update their firstName and lastName, and request to change their email
     .put((req, res) => {
+        console.log(req.body);
         var user;
         authorizer.authenticateRequest(req).then((u) => {
             user = u;

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Franchise } from '../../models/franchise/franchise';
 import { Location } from '../../models/location/location';
 import { ModelService } from '../../services/model/model.service';
@@ -20,7 +21,8 @@ export class CreateLocationComponent extends LoadableComponent implements OnInit
     country: string
   };
 
-  constructor(public modelService: ModelService,
+  constructor(public router: Router,
+    public modelService: ModelService,
     public toastController: ToastController,
     public loadingController: LoadingController) {
 
@@ -54,7 +56,9 @@ export class CreateLocationComponent extends LoadableComponent implements OnInit
     location.setValue('country', this.model.country);
 
     this.modelService.save(location).then((l) => {
-      this.setSuccessMessage(`${l.getValue('address')}, ${l.getValue('city')}, ${l.getValue('country')} created!`);
+      return this.setSuccessMessage(`${l.getValue('address')}, ${l.getValue('city')}, ${l.getValue('country')} created!`);
+    }).then(() => {
+      this.router.navigate(['/home']);
     }).catch((err) => {
       this.setErrorMessage(err);
     });

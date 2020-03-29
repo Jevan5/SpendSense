@@ -42,10 +42,9 @@ export class ScanReceiptService {
   public parseScanForText(file): receipt {
     let json = file;
     const pItems = [];
-    var storeName = null;
 
     json.forEach(el => {
-      if (getHeight(el.boundingPoly) < 100) {
+      if (getHeight(el.boundingPoly) < 1000) {
         // Arbitrary check to factor out items that scan the entire receipt at once... 
         // receipt items probably won't be too large. Change right side of comparator if needed.
         pItems.push(new pItem(el.description,
@@ -55,6 +54,8 @@ export class ScanReceiptService {
           getHeight(el.boundingPoly)));
       }
     });
+
+    const franchiseName = getMax(pItems, 'height').desc;
 
     pItems.sort(sortByY);
     var tItems = pItems;
@@ -92,7 +93,7 @@ export class ScanReceiptService {
       el.getPriceAsLastItem();
     });
 
-    var finalReceipt = new receipt(storeName, finalRows);
+    var finalReceipt = new receipt(franchiseName, finalRows);
 
     return finalReceipt;
   }
@@ -134,12 +135,30 @@ class fItem {
  * @param items array of items
  */
 class receipt {
-  public store: string;
+  public franchiseName: string;
   public items: Array<fItemRow>;
 
-  constructor(store, items) {
-    this.store = store;
-    this.items = items;
+  constructor(franchiseName, items) {
+    this.franchiseName = franchiseName;
+    this.items = [];
+
+    for (const item of items) {
+      if (receipt.isValidText(item.description)) {
+        this.items.push(item);
+      }
+    }
+  }
+
+  static invalidTexts: Array<string> = ['hst', 'tax', '$', 'total'];
+
+  static isValidText(item: string): boolean {
+    for (const invalidText of receipt.invalidTexts) {
+      if (item.toLowerCase().includes(invalidText.toLowerCase())) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }
 
@@ -223,6 +242,22 @@ function sortByX(A, B) {
     comparison = -1;
   }
   return comparison;
+}
+
+function getMax(arr, attribute) {
+  let max = -Infinity;
+  let maxEl;
+
+  for (const el of arr) {
+    const val = el[attribute];
+
+    if (val > max) {
+      max = val;
+      maxEl = el;
+    }
+  }
+
+  return maxEl;
 }
 
 function inline(pItemA, pItemB) {

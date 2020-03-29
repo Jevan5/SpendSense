@@ -32,10 +32,6 @@ export class ManualEntryComponent extends LoadableComponent {
    */
   public franchises: Array<Franchise>;
   /**
-   * Mapping from franchise _ids to their associated franchises.
-   */
-  public franchiseMapping: Map<string, Franchise>;
-  /**
    * Array of all locations.
    */
   public locations: Array<Location>;
@@ -70,7 +66,7 @@ export class ManualEntryComponent extends LoadableComponent {
   /**
    * Mapping from system item name to its most common tag.
    */
-  public commonTags: Map<string, string>;
+  public nameToTag: Map<string, string>;
   /**
    * If editing, this is the original receipt.
    */
@@ -111,38 +107,10 @@ export class ManualEntryComponent extends LoadableComponent {
       date: ManualEntryComponent.getDateString(now)
     };
 
-    this.setLoadingMessage('Loading receipt information...').then(() => {
-      return new Promise((resolve, reject) => {
-        this.route.queryParamMap.subscribe((params) => {
-          if (params.has('_id')) {
-            resolve(params.get('_id'));
-          } else {
-            resolve(null);
-          }
-        }, (err) => {
-          reject(err);
-        });
-      });
-    }).then((id: string) => {
-      if (id == null) {
-        return null;
-      } else {
-        return this.modelService.getOne(id, Receipt);
-      }
-    }).then((receipt) => {
-      if (receipt == null) {
-        this.originalReceipt = null;
-      } else {
-        this.originalReceipt = receipt;
-        this.model.date = ManualEntryComponent.getDateString(this.originalReceipt.getValue('date'));
-      }
-
-      return this.setLoadingMessage('Loading franchises...');
-    }).then(() => {
+    this.setLoadingMessage('Loading franchises...').then(() => {
       return this.modelService.getAll(Franchise);
     }).then((franchises) => {
       this.franchises = franchises;
-      this.franchiseMapping = Franchise.getMapping(franchises);
 
       return this.setLoadingMessage('Loading locations...');
     }).then(() => {
@@ -150,11 +118,6 @@ export class ManualEntryComponent extends LoadableComponent {
     }).then((locations) => {
       this.locations = locations;
       this.locationMapping = Location.getMapping(locations);
-
-      if (this.originalReceipt != null) {
-        this.model.location = this.locationMapping.get(this.originalReceipt.getValue('_locationId'));
-        this.model.franchise = this.franchiseMapping.get(this.model.location.getValue('_franchiseId'));
-      }
 
       return this.setLoadingMessage('Loading system items...');
     }).then(() => {
@@ -187,32 +150,36 @@ export class ManualEntryComponent extends LoadableComponent {
     }).then(() => {
       return this.modelService.getAll(CommonTag);
     }).then((commonTags) => {
-      this.commonTags = new Map<string, string>();
+      this.nameToTag = new Map<string, string>();
 
       commonTags.forEach((commonTag) => {
-        this.commonTags.set(commonTag.getValue('name'), commonTag.getValue('tag'));
+        this.nameToTag.set(commonTag.getValue('name'), commonTag.getValue('tag'));
       });
 
-      if (this.originalReceipt != null) {
-        return this.modelService.getAll(ReceiptItem).then((ris) => {
-          ris.forEach((ri) => {
-            if (ri.getValue('_receiptId') !== this.originalReceipt.getValue('_id')) {
-              return;
-            }
-
-            this.addReceiptItem();
-            let receiptItem = this.model.receiptItems[this.model.receiptItems.length - 1];
-
-            receiptItem.nameOnReceipt = receiptItem.commonName = ri.getValue('name');
-            receiptItem.nameOnReceiptEntered = true;
-            receiptItem.price = ri.getValue('price');
-            receiptItem.tag = this.systemItemMapping.get(ri.getValue('_systemItemId')).getValue('tag');
-          });
-        }).catch((err) => {
-          throw err;
+      return this.setLoadingMessage('Loading receipt information...');
+    }).then(() => {
+      return new Promise((resolve, reject) => {
+        this.route.queryParamMap.subscribe((params) => {
+          if (params.has('_id')) {  // Editing an existing receipt
+            resolve(params.get('_id'));
+          } else {  // Entering a new receipt
+            resolve(null);
+          }
+        }, (err) => {
+          reject(err);
         });
+      });
+    }).then((id: string) => {
+      if (id == null) {
+        return null;
       } else {
-        let scannedReceipt = this.scanReceiptService.getLastReceipt();
+        return this.modelService.getOne(id, Receipt);
+      }
+    }).then((receipt) => {
+      if (receipt == null) {
+        this.originalReceipt = null;
+
+        const scannedReceipt = this.scanReceiptService.getLastReceipt();
 
         if (scannedReceipt == null) {
           return;
@@ -220,19 +187,52 @@ export class ManualEntryComponent extends LoadableComponent {
 
         this.scanReceiptService.clearLastReceipt();
 
+        if (scannedReceipt.franchiseName != null) {
+          const franchiseNames = this.franchises.map(franchise => franchise.getValue('name'));
+
+          const closestFranchiseName = findBestMatch(scannedReceipt.franchiseName.toLowerCase(), franchiseNames).bestMatch.target;
+
+          this.franchises.forEach((franchise) => {
+            if (franchise.getValue('name') === closestFranchiseName) {
+              this.selectsFranchise(franchise);
+            }
+          });
+        }
+
         scannedReceipt.items.forEach((item) => {
           this.addReceiptItem();
-          let receiptItem = this.model.receiptItems[this.model.receiptItems.length - 1];
-          
+          const receiptItem = this.model.receiptItems[this.model.receiptItems.length - 1];
           receiptItem.nameOnReceipt = item.description;
           receiptItem.nameOnReceiptEntered = true;
           receiptItem.price = item.price;
-  
           receiptItem.commonName = findBestMatch(receiptItem.nameOnReceipt.toLowerCase(), this.systemItemNames).bestMatch.target;
-          
-          if (this.commonTags.has(receiptItem.commonName)) {
-            receiptItem.tag = this.commonTags.get(receiptItem.commonName);
+
+          if (this.nameToTag.has(receiptItem.commonName)) {
+            receiptItem.tag = this.nameToTag.get(receiptItem.commonName);
           }
+        });
+      } else {
+        this.originalReceipt = receipt;
+        this.model.date = ManualEntryComponent.getDateString(this.originalReceipt.getValue('date'));
+        this.model.location = this.locationMapping.get(this.originalReceipt.getValue('_locationId'));
+        this.model.franchise = Franchise.getMapping(this.franchises).get(this.model.location.getValue('_franchiseId'));
+
+        return this.modelService.getAll(ReceiptItem).then((ris) => {
+          ris.forEach((ri) => {
+            if (ri.getValue('_receiptId') !== this.originalReceipt.getValue('_id')) {
+              return;
+            }
+
+            this.addReceiptItem();
+            const receiptItem = this.model.receiptItems[this.model.receiptItems.length - 1];
+            receiptItem.nameOnReceipt = ri.getValue('name');
+            receiptItem.commonName = this.systemItemMapping.get(ri.getValue('_systemItemId')).getValue('name');
+            receiptItem.nameOnReceiptEntered = true;
+            receiptItem.price = ri.getValue('price');
+            receiptItem.tag = this.systemItemMapping.get(ri.getValue('_systemItemId')).getValue('tag');
+          });
+        }).catch((err) => {
+          throw err;
         });
       }
     }).then(() => {
@@ -336,30 +336,6 @@ export class ManualEntryComponent extends LoadableComponent {
       }
     });
 
-    let missingSystemItemsPromise: Promise<void>;
-
-    if (missingSystemItems.length > 0) {
-      missingSystemItemsPromise = new Promise<void>((resolve, reject) => {
-        this.setLoadingMessage('Creating missing system items...').then(() => {
-          return this.modelService.saveMany(missingSystemItems);
-        }).then((savedSystemItems) => {
-          savedSystemItems.forEach((systemItem) => {
-            if (!this.systemItemNameMapping.has(systemItem.getValue('name'))) {
-              this.systemItemNameMapping.set(systemItem.getValue('name'), new Set<SystemItem>());
-            }
-    
-            this.systemItemNameMapping.get(systemItem.getValue('name')).add(systemItem);
-          });
-
-          resolve();
-        });
-      });
-    } else {
-      missingSystemItemsPromise = new Promise<void>((resolve, reject) => {
-        resolve();
-      });
-    }
-
     let receipt = new Receipt();
 
     new Promise((resolve, reject) => {
@@ -380,7 +356,23 @@ export class ManualEntryComponent extends LoadableComponent {
       receipt.setValue('_locationId', this.model.location.getValue('_id'));
       receipt.setValue('date', new Date(this.model.date));
       
-      return missingSystemItemsPromise;
+      if (missingSystemItems.length <= 0) {
+        return;
+      }
+
+      return this.setLoadingMessage('Creating missing system items...').then(() => {
+        return this.modelService.saveMany(missingSystemItems);
+      }).then((savedSystemItems) => {
+        savedSystemItems.forEach((systemItem) => {
+          if (!this.systemItemNameMapping.has(systemItem.getValue('name'))) {
+            this.systemItemNameMapping.set(systemItem.getValue('name'), new Set<SystemItem>());
+          }
+
+          this.systemItemNameMapping.get(systemItem.getValue('name')).add(systemItem);
+        });
+      }).catch((err) => {
+        throw err;
+      });
     }).then(() => {
       return this.setLoadingMessage('Creating receipt...');
     }).then(() => {
@@ -421,14 +413,15 @@ export class ManualEntryComponent extends LoadableComponent {
 
       return this.modelService.saveMany(receiptItems);
     }).then(() => {
-      this.setSuccessMessage('Successfully posted your receipt information.');
+      return this.setSuccessMessage('Successfully posted your receipt information.');
+    }).then(() => {
+      this.router.navigate(['/home']);
     }).catch((err) => {
       this.setErrorMessage(err.toString());
     });
   }
 
   public readyToSave(): boolean {
-    return true;
     if (this.model.franchise == null) {
       return false;
     }
@@ -498,8 +491,8 @@ export class ManualEntryComponent extends LoadableComponent {
         // Only decently accurate ratings accepted
         receiptItem.commonName = result.bestMatch.target;
 
-        if (this.commonTags.has(receiptItem.commonName)) {
-          receiptItem.tag = this.commonTags.get(receiptItem.commonName);
+        if (this.nameToTag.has(receiptItem.commonName)) {
+          receiptItem.tag = this.nameToTag.get(receiptItem.commonName);
         }
       }
     }
@@ -511,8 +504,8 @@ export class ManualEntryComponent extends LoadableComponent {
   }
 
   public selectsCommonName(name: string, index: number): void {
-    if (this.commonTags.has(name)) {
-      this.model.receiptItems[index].tag = this.commonTags.get(name);
+    if (this.nameToTag.has(name)) {
+      this.model.receiptItems[index].tag = this.nameToTag.get(name);
     } else {
       this.model.receiptItems[index].tag = null;
     }

@@ -14,25 +14,7 @@ https://nodejs.org/en/
 
 https://www.mongodb.com/download-center/community
 
-## Installation
-
-### Android
-
-TODO
-
-### iOS
-
-TODO
-
-### Windows
-
-TODO
-
-## Documentation
-
-TODO
-
-### Using Google Vision API
+## Using Google Vision API
 
 Google Vision API information can be [viewed on their site here](https://cloud.google.com/vision/docs/before-you-begin). An account should be created for use, as calling the API requires a unique access token.
 

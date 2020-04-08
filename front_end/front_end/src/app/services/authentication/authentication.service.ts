@@ -31,7 +31,7 @@ export class AuthenticationService {
         return reject('password is null');
       }
 
-      this.http.get('http://' + environment.backEndIp + ':' + environment.backEndPort + '/users', {
+      this.http.get(environment.backEndUrl + ':' + environment.backEndPort + '/users', {
         headers: new HttpHeaders({
           'Authorization': username + ',' + password
         })
@@ -83,7 +83,7 @@ export class AuthenticationService {
    */
   public register(username: string, password: string, firstName: string, lastName: string, email: string): Promise<User> {
     return new Promise((resolve, reject) => {
-      this.http.post('http://' + environment.backEndIp + ':' + environment.backEndPort + '/users', {
+      this.http.post(environment.backEndUrl + ':' + environment.backEndPort + '/users', {
         user: {
           username: username,
           password: password,
@@ -111,7 +111,7 @@ export class AuthenticationService {
    */
   public changePassword(username: string, password: string): Promise<User> {
     return new Promise((resolve, reject) => {
-      this.http.put('http://' + environment.backEndIp + ':' + environment.backEndPort + '/users', {
+      this.http.put(environment.backEndUrl + ':' + environment.backEndPort + '/users', {
         user: {
           username: username,
           changingPassword: password

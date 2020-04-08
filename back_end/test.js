@@ -1,6 +1,6 @@
 const secrets       = require('../secrets.json');
 const mongoose      = require('mongoose');
-const environment   = require('./environment');
+const Environment   = require('./environment');
 const chai          = require('chai');
 const chaiHttp      = require('chai-http');
 
@@ -21,10 +21,14 @@ function runTest(name, path) {
 
 before((done) => {
     mongoose.connection.close().then(() => {
-        return mongoose.connect('mongodb://localhost:27017/' + environment.db, {
+        return mongoose.connect('mongodb://localhost:27017/' + Environment.instance.db, {
             useNewUrlParser: true,
-            useUnifiedTopology: true
+			useUnifiedTopology: true,
+			useFindAndModify: false,
+			useCreateIndex: true
         });
+    }).then(() => {
+        return mongoose.connection.dropDatabase();
     }).then(() => {
         done();
     }).catch((err) => {

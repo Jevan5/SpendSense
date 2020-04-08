@@ -10,8 +10,8 @@ import { LoadableComponent } from '../loadable/loadable.component';
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent extends LoadableComponent implements OnInit {
-  constructor(private router: Router,
-    private authenticationService: AuthenticationService,
+  constructor(public router: Router,
+    public authenticationService: AuthenticationService,
     public loadingController: LoadingController,
     public toastController: ToastController) {
     super(loadingController, toastController);
@@ -23,14 +23,14 @@ export class NavbarComponent extends LoadableComponent implements OnInit {
    * Navigates to a path.
    * @param path Path to navigate to.
    */
-  private clickNavigation(path: string): void {
+  public clickNavigation(path: string): void {
     this.router.navigate([path]);
   }
 
   /**
    * Logs the user out.
    */
-  private clickLogout(): void {
+  public clickLogout(): void {
     if (!this.authenticationService.isLoggedIn()) {
       throw new Error('Logging out when user is not logged in.');
     }

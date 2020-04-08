@@ -10,7 +10,7 @@
 <ion-content fullscreen>
   <ion-item>
     <ion-label position='stacked'>Franchise</ion-label>
-    <app-dropdown-search [items]='franchises' [displayFunction]='franchiseDisplayFunction' (selectsItem)='selectsFranchise($event)' (unselectsItem)='unselectsFranchise($event)'></app-dropdown-search>
+    <app-dropdown-search [items]='franchises' [displayFunction]='franchiseDisplayFunction' (selectsItem)='selectsFranchise($event)' (unselectsItem)='unselectsFranchise()'></app-dropdown-search>
   </ion-item>
   <ion-item>
     <ion-label position='stacked'>Address</ion-label>

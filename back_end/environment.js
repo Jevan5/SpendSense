@@ -1,56 +1,40 @@
-let prod = {
-    logPath: 'logs/logs.txt',
-    port: 8080,
-    ip: 'TODO',
-    db: 'prod'
-};
+class Environment {
+    static modeEnum = {
+        PROD: 'prod',
+        DEV: 'dev',
+        TEST: 'test'
+    };
 
-let dev = {
-    logPath: 'logs/devLogs.txt',
-    port: 8081,
-    ip: '127.0.0.1',
-    db: 'dev'
-};
+    static dbPrefix = 'spend-sense';
 
-let test = {
-    logPath: 'logs/testLogs.txt',
-    port: 8082,
-    ip: '127.0.0.1',
-    db: 'test'
-};
+    constructor(l, p, u, m) {
+        this.logPath = l;
+        this.port = p;
+        this.url = u;
+        this.mode = m;
+        this.db = `${Environment.dbPrefix}-${this.mode}`;
+    }
 
-let mode;
+    static instance = null;
+}
+
+let instance;
 switch (process.argv[2]) {
-    case 'prod':
-        mode = prod;
+    case Environment.modeEnum.PROD:
+        instance = new Environment('logs/logs.txt', 8001, 'https://joshuaevans.ca', Environment.modeEnum.PROD);
         break;
-    case 'dev':
-        mode = dev;
+    case Environment.modeEnum.DEV:
+        instance = new Environment('logs/logs.txt', 8003, 'http://localhost', Environment.modeEnum.DEV);
         break;
-    case 'test':
-        mode = test;
+    case Environment.modeEnum.TEST:
+        instance = new Environment('logs/logs.txt', 8005, 'http://localhost', Environment.modeEnum.TEST);
         break;
     default:
         // Not in prod or test mode
-        console.log(process.argv[2] + ' is not "prod", "dev", or "test"');
+        console.log(`${process.argv[2]} is not "${Environment.modeEnum.PROD}", "${Environment.modeEnum.DEV}", or "${Environment.modeEnum.TEST}"`);
         process.exit();
 }
 
-module.exports = {
-    /**
-     * Path to log to.
-     */
-    logPath: mode.logPath,
-    /**
-     * Port to serve off.
-     */
-    port: mode.port,
-    /**
-     * IP to serve off.
-     */
-    ip: mode.ip,
-    /**
-     * Name of the database.
-     */
-    db: mode.db
-};
+Environment.instance = instance;
+
+module.exports = Environment;

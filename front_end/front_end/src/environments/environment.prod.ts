@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  production: true,
+  backEndUrl: 'https://joshuaevans.ca',
+  backEndPort: 8001
 };

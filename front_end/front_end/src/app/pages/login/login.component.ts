@@ -10,7 +10,7 @@ import { LoadableComponent } from '../../components/loadable/loadable.component'
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent extends LoadableComponent implements OnInit {
-  private model: {
+  public model: {
     login: {
       username: string,
       password: string
@@ -26,8 +26,8 @@ export class LoginComponent extends LoadableComponent implements OnInit {
     }
   };
 
-  constructor(private router: Router,
-    private authenticationService: AuthenticationService,
+  constructor(public router: Router,
+    public authenticationService: AuthenticationService,
     public loadingController: LoadingController,
     public toastController: ToastController) {
     super(loadingController, toastController);
@@ -54,7 +54,7 @@ export class LoginComponent extends LoadableComponent implements OnInit {
   /**
    * Attempts to login the user.
    */
-  private login(): void {
+  public login(): void {
     this.setLoadingMessage("Attempting to login " + this.model.login.username).then(() => {
       return this.authenticationService.login(this.model.login.username, this.model.login.password);
     }).then((user) => {
@@ -69,7 +69,7 @@ export class LoginComponent extends LoadableComponent implements OnInit {
   /**
    * Attempts to register the user.
    */
-  private register(): void {
+  public register(): void {
     this.setLoadingMessage("Attempting to register " + this.model.register.username).then(() => {
       return this.authenticationService.register(this.model.register.username, this.model.register.password, this.model.register.firstName, this.model.register.lastName, this.model.register.email);
     }).then((user) => {
@@ -84,7 +84,7 @@ export class LoginComponent extends LoadableComponent implements OnInit {
   /**
    * Attempts to change a user's password.
    */
-  private changePassword(): void {
+  public changePassword(): void {
     this.setLoadingMessage("Attempting to change password for " + this.model.changePassword.username).then(() => {
       return this.authenticationService.changePassword(this.model.changePassword.username, this.model.changePassword.changingPassword);
     }).then((user) => {
@@ -98,7 +98,7 @@ export class LoginComponent extends LoadableComponent implements OnInit {
   /**
    * Clears all values on the page.
    */
-  private clearValues(): void {
+  public clearValues(): void {
     this.model = {
       login: {
         username: '',

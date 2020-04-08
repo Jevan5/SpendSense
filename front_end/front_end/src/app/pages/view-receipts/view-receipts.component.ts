@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./view-receipts.component.scss'],
 })
 export class ViewReceiptsComponent extends LoadableComponent implements OnInit {
-  private receipts: Array<{
+  public receipts: Array<{
     receipt: Receipt,
     franchiseId: string,
     franchise: Franchise,

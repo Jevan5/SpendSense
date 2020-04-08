@@ -14,12 +14,12 @@
   </ion-item>
   <ion-item>
     <ion-label position='stacked'>Franchise</ion-label>
-    <app-dropdown-search [(value)]='model.franchise' [items]='franchises' [displayFunction]='franchiseDisplayFunction' (selectsItem)='selectsFranchise($event)' (unselectsItem)='unselectsFranchise($event)'></app-dropdown-search>
+    <app-dropdown-search [(value)]='model.franchise' [items]='franchises' [displayFunction]='franchiseDisplayFunction' (selectsItem)='selectsFranchise($event)' (unselectsItem)='unselectsFranchise()'></app-dropdown-search>
   </ion-item>
   <ion-button *ngIf='model.franchise == null' (click)='router.navigate(["/create-franchise"])'>Can't find a Franchise?</ion-button>
   <ion-item *ngIf='model.franchise != null'>
     <ion-label position='stacked'>Location</ion-label>
-    <app-dropdown-search [(value)]='model.location' [items]='locationsOfFranchise' [displayFunction]='locationDisplayFunction' (selectsItem)='selectsLocation($event)' (unselectsItem)='unselectsLocation($event)'></app-dropdown-search>
+    <app-dropdown-search [(value)]='model.location' [items]='locationsOfFranchise' [displayFunction]='locationDisplayFunction' (selectsItem)='selectsLocation($event)' (unselectsItem)='unselectsLocation()'></app-dropdown-search>
   </ion-item>
   <ion-button *ngIf='model.franchise != null && model.location == null' (click)='router.navigate(["/create-location"])'>Can't find a Location?</ion-button>
   <ion-list>

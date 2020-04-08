@@ -14,7 +14,7 @@ export class ScanReceiptService {
 
   public scanReceipt(formData: FormData): Promise<any> {
     return new Promise<any>((resolve, reject) => {
-      this.httpClient.post('http://' + environment.backEndIp + ':' + environment.backEndPort + '/scanReceipt',
+      this.httpClient.post(environment.backEndUrl + ':' + environment.backEndPort + '/scanReceipt',
       formData,
       this.authenticationService.getAuthorizationHeader()).subscribe((res: any) => {
         let r = this.parseScanForText(res);

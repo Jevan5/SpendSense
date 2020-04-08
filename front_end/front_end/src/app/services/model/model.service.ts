@@ -19,7 +19,7 @@ export class ModelService {
    */
   public getOne(id: string, modelClass): Promise<Model> {
     return new Promise((resolve, reject) => {
-      this.http.get('http://' + environment.backEndIp + ':' + environment.backEndPort + '/' + modelClass.getModelName() + 's/' + id, this.authenticationService.getAuthorizationHeader())
+      this.http.get(environment.backEndUrl + ':' + environment.backEndPort + '/' + modelClass.getModelName() + 's/' + id, this.authenticationService.getAuthorizationHeader())
       .subscribe((data) => {
         try {
           var model = Model.createOneFromResponse(data, modelClass);
@@ -49,7 +49,7 @@ export class ModelService {
           paramsString += key + '=' + value + '&';
         });
 
-        this.http.get('http://' + environment.backEndIp + ':' + environment.backEndPort + '/' + modelClass.getModelName() + 's/' + paramsString, this.authenticationService.getAuthorizationHeader())
+        this.http.get(environment.backEndUrl + ':' + environment.backEndPort + '/' + modelClass.getModelName() + 's/' + paramsString, this.authenticationService.getAuthorizationHeader())
         .subscribe((data) => {
           try {
             var models = Model.createManyFromResponse(data, modelClass);
@@ -78,11 +78,11 @@ export class ModelService {
     return new Promise((resolve, reject) => {
         var request: Observable<any>;
         if (model.hasField('_id')) {  // Updating
-          request = this.http.put('http://' + environment.backEndIp + ':' + environment.backEndPort + '/' + model.class.getModelName() + 's/' + model.getValue('_id'),
+          request = this.http.put(environment.backEndUrl + ':' + environment.backEndPort + '/' + model.class.getModelName() + 's/' + model.getValue('_id'),
           JSON.parse("{\"" + model.class.getModelName() + "\": " + JSON.stringify(model.toJson()) + "}"),
           this.authenticationService.getAuthorizationHeader());
         } else {  // Creating new
-          request = this.http.post('http://' + environment.backEndIp + ':' + environment.backEndPort + '/' + model.class.getModelName() + 's',
+          request = this.http.post(environment.backEndUrl + ':' + environment.backEndPort + '/' + model.class.getModelName() + 's',
           JSON.parse("{\"" + model.class.getModelName() + "\": " + JSON.stringify(model.toJson()) + "}"),
           this.authenticationService.getAuthorizationHeader());
         }
@@ -130,7 +130,7 @@ export class ModelService {
    */
   public deleteOne(id: string, modelClass): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.http.delete('http://' + environment.backEndIp + ':' + environment.backEndPort + '/' + modelClass.getModelName() + 's/' + id, this.authenticationService.getAuthorizationHeader())
+      this.http.delete(environment.backEndUrl + ':' + environment.backEndPort + '/' + modelClass.getModelName() + 's/' + id, this.authenticationService.getAuthorizationHeader())
       .subscribe((data) => {
         try {
           resolve();

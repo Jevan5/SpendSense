@@ -40,6 +40,7 @@ import { ViewReceiptsTutorialComponent } from './components/tutorial/view-receip
 import { ReportsTutorialComponent } from './components/tutorial/reports-tutorial/reports-tutorial.component';
 import { SearchTutorialComponent } from './components/tutorial/search-tutorial/search-tutorial.component';
 import { ProfileTutorialComponent } from './components/tutorial/profile-tutorial/profile-tutorial.component';
+import { LoadableComponent } from './components/loadable/loadable.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { ProfileTutorialComponent } from './components/tutorial/profile-tutorial
     ViewReceiptsTutorialComponent,
     ReportsTutorialComponent,
     SearchTutorialComponent,
-    ProfileTutorialComponent
+    ProfileTutorialComponent,
+    LoadableComponent
   ],
   entryComponents: [],
   imports: [

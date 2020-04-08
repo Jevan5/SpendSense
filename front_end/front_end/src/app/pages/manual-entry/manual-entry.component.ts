@@ -13,7 +13,6 @@ import { CommonTag } from 'src/app/models/commonTag/commonTag';
 import { findBestMatch } from 'string-similarity';
 import { ScanReceiptService } from '../../services/scan-receipt/scan-receipt.service';
 import { ActivatedRoute } from '@angular/router';
-import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-manual-entry',

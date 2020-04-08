@@ -1,8 +1,8 @@
-# Virtualytics
+# SpendSense
 
 > An expensing tool that lessens the burden of manual entry from the user, and provides valuable insights regarding the user's spending.
 
-Virtualytics uses computer vision to parse receipts and bills, and quantifies this data so that it may be analyzed. The items from a receipt or a bill can be categorized, to allow more powerful analytical reporting. The user can track their spending at merchants or in categories over time to see if they are meeting their budgeting goals. By collecting data from different merchants, users can query the systemt to see which merchants sell which items, and who sells it the cheapest.
+SpendSense uses computer vision to parse receipts and bills, and quantifies this data so that it may be analyzed. The items from a receipt or a bill can be categorized, to allow more powerful analytical reporting. The user can track their spending at merchants or in categories over time to see if they are meeting their budgeting goals. By collecting data from different merchants, users can query the systemt to see which merchants sell which items, and who sells it the cheapest.
 
 ## Dependencies
 
@@ -151,7 +151,7 @@ type nul > routes/<routeName>/<routeName>.js
 Clone the repository locally.
 
 ```sh
-git clone git@github.com:Jevan5/Virtualytics.git
+git clone git@github.com:Jevan5/SpendSense.git
 ```
 
 Pull the current development branch.

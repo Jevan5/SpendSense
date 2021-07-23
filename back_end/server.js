@@ -5,6 +5,9 @@ const bodyParser    		= require('body-parser');
 const Environment   		= require('./environment');
 const UpdateLocationItems	= require('./jobs/updateLocationItems');
 const UpdateCommonTags		= require('./jobs/updateCommonTags');
+const http					= require('http');
+const https					= require('https');
+const fs					= require('fs');
 
 async function startServer() {
 	const busboy = require('connect-busboy');
@@ -66,10 +69,21 @@ async function startServer() {
 		UpdateCommonTags.startJob(1000 * 60 * 60 * 24);
 	}
 
-	app.listen(Environment.instance.port);
-	console.log('Listening on ' + Environment.instance.port);
+	let server;
+	if (Environment.instance.mode === Environment.modeEnum.PROD) {
+		server = https.createServer({
+			cert: fs.readFileSync('../../cert/server.crt', 'utf-8'),
+			key: fs.readFileSync('../../cert/server.key', 'utf-8')
+		}, app);
+	} else {
+		server = http.createServer(app);
+	}
 
-	module.exports = app;
+	server.listen(Environment.instance.port, () => {
+		console.log(`Listening at ${Environment.instance.url}:${Environment.instance.port} for HTTP${Environment.instance.mode === Environment.modeEnum.PROD ? 'S' : ''} connections`);
+	});
 }
 
 startServer();
+
+module.exports = app;

@@ -3,7 +3,7 @@ const router            = express.Router();
 const User              = require('../../models/user/user');
 const cryptoHelper      = require('../../tools/cryptoHelper');
 const nodemailerHelper  = require('../../tools/nodemailerHelper');
-const environment       = require('../../environment');
+const environment       = require('../../environment').instance;
 const authorizer        = require('../../tools/authorizer');
 const promiseHelper     = require('../../tools/promiseHelper');
 const logger            = require('../../tools/logger');
@@ -46,7 +46,7 @@ router.route('/')
 
         nodemailerHelper.sendMail(user.email,
             'Registration for Virtualytics',
-            'Please click the following link to complete registration: http://' + environment.ip + ':' + environment.port + '/authenticate/?username=' + user.username + '&authentication=' + authenticationPlaintext)
+            `Please click the following link to complete registration: ${environment.url}:${environment.port}/authenticate/?username=${user.username}&authentication=${authenticationPlaintext}`)
         .then(() => {
             return user.save();
         }).then(() => {

@@ -13,7 +13,9 @@ export class AuthenticationService {
   private password: string;
   private authorizationHeader = 'Authorization';
 
-  constructor(public http: HttpClient, public storage: Storage) {}
+  constructor(public http: HttpClient, public storage: Storage) {
+    this.storage.create();
+  }
 
   /**
    * Attempts to login the user.

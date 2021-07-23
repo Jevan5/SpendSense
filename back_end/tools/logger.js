@@ -1,5 +1,5 @@
 const fs = require('fs');
-const environment = require('../environment');
+const Environment = require('../environment');
 
 module.exports = class Logger {
     /**
@@ -9,7 +9,7 @@ module.exports = class Logger {
     static log(text) {
         let formattedText = new Date().toLocaleString() + ' ERROR: ' + text;
         console.log(formattedText);
-        fs.appendFileSync(environment.logPath, formattedText);
+        fs.appendFileSync(Environment.instance.logPath, formattedText);
     }
 
     /**

@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha test --exit --timeout 30000",
-    "start": "nodemon server.js prod"
+    "start": "nodemon server.js dev",
+    "start:prod": "node server.js prod"
   },
   "author": "",
   "license": "ISC",

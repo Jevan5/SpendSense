@@ -4,7 +4,7 @@ import { RouteReuseStrategy, RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
-import { Storage, IonicStorageModule } from '@ionic/storage';
+import { Storage, IonicStorageModule } from '@ionic/storage-angular';
   
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';

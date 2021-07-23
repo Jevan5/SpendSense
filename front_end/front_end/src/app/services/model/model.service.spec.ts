@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientModule } from '@angular/common/http';
-import { Storage } from '@ionic/storage';
+import { Storage } from '@ionic/storage-angular';
 
 import { ModelService } from './model.service';
 

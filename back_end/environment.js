@@ -21,13 +21,13 @@ class Environment {
 let instance;
 switch (process.argv[2]) {
     case Environment.modeEnum.PROD:
-        instance = new Environment('logs/logs.txt', 8001, 'https://joshuaevans.ca', Environment.modeEnum.PROD);
+        instance = new Environment('logs/logs.txt', 8031, 'https://joshuaevans.ca', Environment.modeEnum.PROD);
         break;
     case Environment.modeEnum.DEV:
-        instance = new Environment('logs/logs.txt', 8003, 'http://localhost', Environment.modeEnum.DEV);
+        instance = new Environment('logs/logs.txt', 8033, 'http://localhost', Environment.modeEnum.DEV);
         break;
     case Environment.modeEnum.TEST:
-        instance = new Environment('logs/logs.txt', 8005, 'http://localhost', Environment.modeEnum.TEST);
+        instance = new Environment('logs/logs.txt', 8035, 'http://localhost', Environment.modeEnum.TEST);
         break;
     default:
         // Not in prod or test mode

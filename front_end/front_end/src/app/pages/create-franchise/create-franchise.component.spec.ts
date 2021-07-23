@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientModule } from '@angular/common/http';
-import { Storage } from '@ionic/storage';
+import { Storage } from '@ionic/storage-angular';
 
 import { CreateFranchiseComponent } from './create-franchise.component';
 

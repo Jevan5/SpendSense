@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../../models/user/user';
 import { environment } from '../../../environments/environment';
-import { Storage } from '@ionic/storage';
+import { Storage } from '@ionic/storage-angular';
 import { Model } from 'src/app/models/model';
 
 @Injectable({
@@ -167,7 +167,7 @@ export class AuthenticationService {
   public autoLogin(): Promise<User> {
     var username;
     var password;
-    this.storage = new Storage({});
+    this.storage = new Storage();
 
     return this.storage.get('username').then((u) => {
       username = u;

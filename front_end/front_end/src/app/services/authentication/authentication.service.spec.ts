@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { Storage } from '@ionic/storage';
+import { Storage } from '@ionic/storage-angular';
 
 import { AuthenticationService } from './authentication.service';
 import { User } from 'src/app/models/user/user';

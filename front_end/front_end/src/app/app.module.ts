@@ -23,8 +23,8 @@ import { SearchComponent } from 'src/app/pages/search/search.component';
 
 import { UploadImageComponent } from './pages/upload-image/upload-image.component';
 
-import { File } from '@ionic-native/File/ngx';
-import { Camera } from '@ionic-native/Camera/ngx';
+import { File } from '@ionic-native/file/ngx';
+import { Camera } from '@ionic-native/camera/ngx';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
 import { ManualEntryComponent } from './pages/manual-entry/manual-entry.component';
